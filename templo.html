@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Templo do Código</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>🏛️ Templo do Código</h1>
+    <p>No altar do templo, você encontra uma runa com o número:</p>
+    <blockquote>“2, 4, 8, 16, ?”</blockquote>
+    <p>Complete a sequência.</p>
+    <input type="text" id="resposta" placeholder="Digite sua resposta">
+    <button onclick="verificar()">Responder</button>
+    <p id="feedback"></p>
+  </div>
+  <script>
+    function verificar() {
+      const resposta = document.getElementById("resposta").value.trim();
+      const feedback = document.getElementById("feedback");
+      if (resposta === "32") {
+        feedback.innerHTML = '✅ Bloco da Lógica recuperado! <a href="final.html">Restaurar o Mundo</a>';
+        feedback.style.color = "lightgreen";
+      } else {
+        feedback.innerText = "❌ Sequência incorreta.";
+        feedback.style.color = "red";
+      }
+    }
+  </script>
+</body>
+</html>

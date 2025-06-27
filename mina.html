@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Mina Sombria</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>⛏️ Mina Sombria</h1>
+    <p>Você entra na escuridão da mina. Um som ecoa com uma sequência:</p>
+    <blockquote>“Gravel, Stone, Cobblestone, ???”</blockquote>
+    <p>Qual bloco vem a seguir?</p>
+    <input type="text" id="resposta" placeholder="Digite sua resposta">
+    <button onclick="verificar()">Responder</button>
+    <p id="feedback"></p>
+  </div>
+  <script>
+    function verificar() {
+      const resposta = document.getElementById("resposta").value.toLowerCase().trim();
+      const feedback = document.getElementById("feedback");
+      if (resposta === "andesito" || resposta === "andesite") {
+        feedback.innerHTML = '✅ Você achou o Bloco da Força! <a href="templo.html">Ir para o Templo</a>';
+        feedback.style.color = "lightgreen";
+      } else {
+        feedback.innerText = "❌ Bloco errado. Tente de novo.";
+        feedback.style.color = "red";
+      }
+    }
+  </script>
+</body>
+</html>

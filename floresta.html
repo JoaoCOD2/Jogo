@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Floresta dos Blocos</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      background: url('https://i.pinimg.com/originals/ba/ed/da/baeddaa8a28ed4a71df79662ffbb15f6.gif') no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'Press Start 2P', cursive;
+      color: #fff;
+    }
+
+    .container {
+      backface-visibility: hidden;
+      max-width: 600px;
+      margin: auto;
+      padding: 30px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px #00ff4c;
+    }
+
+    h1 {
+      color: #00ff99;
+    }
+
+    label {
+      display: block;
+      margin: 10px 0;
+    }
+
+    button {
+      padding: 10px;
+      font-family: inherit;
+      background-color: #2196F3;
+      color: white;
+      border: none;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background-color: #0b7dda;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🌲 Floresta dos Pixels</h1>
+    <p>As árvores pixeladas sussurram enigmas... Um bloco mágico está escondido aqui.</p>
+    <blockquote>“Qual bloco nasce da mistura de água com lava?”</blockquote>
+
+    <form id="quiz">
+      <label><input type="radio" name="resposta" value="areia"> Areia</label>
+      <label><input type="radio" name="resposta" value="madeira"> Madeira</label>
+      <label><input type="radio" name="resposta" value="pedra"> Pedra</label>
+      <label><input type="radio" name="resposta" value="carvao"> Carvão</label>
+      <button type="button" onclick="verificar()">Responder</button>
+    </form>
+
+    <p id="feedback"></p>
+  </div>
+
+  <script>
+    function verificar() {
+      const opcoes = document.getElementsByName("resposta");
+      let respostaSelecionada = null;
+      for (const opcao of opcoes) {
+        if (opcao.checked) {
+          respostaSelecionada = opcao.value;
+          break;
+        }
+      }
+
+      const feedback = document.getElementById("feedback");
+      if (!respostaSelecionada) {
+        feedback.innerText = "Por favor, selecione uma resposta.";
+        feedback.style.color = "yellow";
+      } else if (respostaSelecionada === "pedra") {
+        feedback.innerHTML = '✅ Você encontrou o Bloco da Resistência! <a href="mina.html">Ir para a Mina</a>';
+        feedback.style.color = "lightgreen";
+      } else {
+        feedback.innerText = "❌ Resposta incorreta. Tente novamente.";
+        feedback.style.color = "red";
+      }
+    }
+  </script>
+</body>
+</html>
