@@ -12,17 +12,18 @@
       color: #fff;
     }
 
-    .container {
-      backface-visibility: hidden;
-      max-width: 600px;
-      margin: auto;
-      padding: 30px;
-      border-radius: 5px;
-      box-shadow: 0 0 10px #00ff4c;
+    .text {
+      text-align: center;
+      padding: 50px;
+      font-size: 25px;
+      color: #51ff0091;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
     }
 
     h1 {
-      color: #00ff99;
+      color: #51ff0091; 
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+      
     }
 
     label {
@@ -46,10 +47,11 @@
   </style>
 </head>
 <body>
-  <div class="container">
+  <div class="text">
     <h1>🌲 Floresta dos Pixels</h1>
+</div>
     <p>As árvores pixeladas sussurram enigmas... Um bloco mágico está escondido aqui.</p>
-    <blockquote>“Qual bloco nasce da mistura de água com lava?”</blockquote>
+    <h1>“Qual bloco nasce da mistura de água com lava?”</h1>
 
     <form id="quiz">
       <label><input type="radio" name="resposta" value="areia"> Areia</label>
@@ -60,7 +62,7 @@
     </form>
 
     <p id="feedback"></p>
-  </div>
+
 
   <script>
     function verificar() {
