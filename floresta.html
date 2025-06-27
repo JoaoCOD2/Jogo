@@ -3,90 +3,178 @@
 <head>
   <meta charset="UTF-8">
   <title>Floresta dos Blocos</title>
-  <link rel="stylesheet" href="style.css">
   <style>
     body {
       background: url('https://i.pinimg.com/originals/ba/ed/da/baeddaa8a28ed4a71df79662ffbb15f6.gif') no-repeat center center fixed;
       background-size: cover;
       font-family: 'Press Start 2P', cursive;
-      color: #fff;
-    }
-
-    .text {
-      text-align: center;
-      padding: 50px;
-      font-size: 25px;
-      color: #51ff0091;
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
-    }
-
-    h1 {
-      color: #51ff0091; 
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
-      
-    }
-
-    label {
-      display: block;
-      margin: 10px 0;
-    }
-
-    button {
-      padding: 10px;
-      font-family: inherit;
-      background-color: #2196F3;
-      color: white;
-      border: none;
+      color: #baffc9;
+      margin: 0;
+      height: 100vh;
+      overflow: hidden;
       cursor: pointer;
-      margin-top: 10px;
     }
 
-    button:hover {
-      background-color: #0b7dda;
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+    }
+
+    .intro, .quiz {
+      background: rgba(0, 0, 0, 0.6);
+      border: 2px solid #00ffe1;
+      border-radius: 15px;
+      width: 85%;
+      max-width: 800px;
+      padding: 40px;
+      box-shadow: 0 0 25px #00ffe1aa;
+      text-align: center;
+    }
+
+    .intro h1 {
+      font-size: 40px;
+      color: #00ffe1;
+      text-shadow: 2px 2px 8px #000, 0 0 12px #00ffe1;
+    }
+
+    #typed-text {
+      white-space: pre-wrap;
+      display: inline-block;
+      font-size: 20px;
+      color: #c9fcff;
+      text-shadow: 1px 1px 3px #000;
+    }
+
+    #quizContainer {
+      display: none;
+    }
+
+    #quizContainer h1 {
+      font-size: 28px;
+      color: #00ffe1;
+      margin-bottom: 30px;
+      text-shadow: 2px 2px 6px #000, 0 0 8px #00ffe1;
+    }
+
+    .bloco-opcao {
+      display: inline-block;
+      width: 120px;
+      height: 120px;
+      margin: 15px;
+      line-height: 120px;
+      background-color: #111;
+      color: #fff;
+      font-size: 14px;
+      border: 2px solid #00ffe1;
+      border-radius: 8px;
+      box-shadow: 0 0 10px #00ffe1aa;
+      transition: all 0.3s ease;
+      background-size: cover;
+      background-position: center;
+      text-shadow: 1px 1px 2px #000;
+      cursor: pointer;
+    }
+
+    .bloco-opcao:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 20px #00ffe1;
+    }
+
+    .areia:hover {
+      background-image: url('https://i.imgur.com/7YROlmO.gif');
+    }
+
+    .madeira:hover {
+      background-image: url('https://i.imgur.com/9JkdYZZ.gif');
+    }
+
+    .pedra:hover {
+      background-image: url('https://i.imgur.com/HWmYmku.gif');
+    }
+
+    .carvao:hover {
+      background-image: url('https://i.imgur.com/BMSa4o4.gif');
+    }
+
+    #feedback {
+      margin-top: 30px;
+      font-size: 18px;
+      color: #ffffff;
+      text-shadow: 1px 1px 3px #000;
+    }
+
+    a {
+      color: #00ffe1;
+      text-decoration: underline;
+    }
+
+    a:hover {
+      color: #ffffff;
     }
   </style>
 </head>
-<body>
-  <div class="text">
-    <h1>🌲 Floresta dos Pixels</h1>
-</div>
-    <p>As árvores pixeladas sussurram enigmas... Um bloco mágico está escondido aqui.</p>
-    <h1>“Qual bloco nasce da mistura de água com lava?”</h1>
+<body onclick="iniciarJogo()">
 
-    <form id="quiz">
-      <label><input type="radio" name="resposta" value="areia"> Areia</label>
-      <label><input type="radio" name="resposta" value="madeira"> Madeira</label>
-      <label><input type="radio" name="resposta" value="pedra"> Pedra</label>
-      <label><input type="radio" name="resposta" value="carvao"> Carvão</label>
-      <button type="button" onclick="verificar()">Responder</button>
-    </form>
+  <!-- Parte 1: Introdução -->
+  <div class="container" id="introContainer">
+    <div class="intro" id="introducao">
+      <h1>🌲 Floresta dos Pixels</h1>
+      <p id="typed-text"></p>
+    </div>
+  </div>
 
-    <p id="feedback"></p>
-
+  <!-- Parte 2: Quiz -->
+  <div class="container" id="quizContainer">
+    <div class="quiz">
+      <h1>“Qual bloco nasce da mistura de água com lava?”</h1>
+      <div id="blocos">
+        <div class="bloco-opcao areia" onclick="verificar('areia')">Areia</div>
+        <div class="bloco-opcao madeira" onclick="verificar('madeira')">Madeira</div>
+        <div class="bloco-opcao pedra" onclick="verificar('pedra')">Pedra</div>
+        <div class="bloco-opcao carvao" onclick="verificar('carvao')">Carvão</div>
+      </div>
+      <p id="feedback"></p>
+    </div>
+  </div>
 
   <script>
-    function verificar() {
-      const opcoes = document.getElementsByName("resposta");
-      let respostaSelecionada = null;
-      for (const opcao of opcoes) {
-        if (opcao.checked) {
-          respostaSelecionada = opcao.value;
-          break;
-        }
-      }
+    const texto = "As árvores pixeladas sussurram enigmas...\nClique em qualquer lugar para continuar.";
+    const elementoTexto = document.getElementById("typed-text");
+    let i = 0;
 
+    function digitar() {
+      if (i < texto.length) {
+        elementoTexto.innerHTML += texto.charAt(i);
+        i++;
+        setTimeout(digitar, 40);
+      }
+    }
+
+    digitar();
+
+    let iniciado = false;
+    function iniciarJogo() {
+      if (!iniciado && i >= texto.length) {
+        document.getElementById("introContainer").style.display = "none";
+        document.getElementById("quizContainer").style.display = "flex";
+        document.body.style.cursor = "default";
+        iniciado = true;
+      }
+    }
+
+    function verificar(resposta) {
       const feedback = document.getElementById("feedback");
-      if (!respostaSelecionada) {
-        feedback.innerText = "Por favor, selecione uma resposta.";
-        feedback.style.color = "yellow";
-      } else if (respostaSelecionada === "pedra") {
+      if (resposta === "pedra") {
         feedback.innerHTML = '✅ Você encontrou o Bloco da Resistência! <a href="mina.html">Ir para a Mina</a>';
-        feedback.style.color = "lightgreen";
+        feedback.style.color = "#00ffe1";
       } else {
         feedback.innerText = "❌ Resposta incorreta. Tente novamente.";
         feedback.style.color = "red";
       }
     }
   </script>
+
 </body>
 </html>
