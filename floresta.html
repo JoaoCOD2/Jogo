@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
   <meta charset="UTF-8">
   <title>Floresta dos Blocos</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
   <style>
     body {
       background: url('https://i.pinimg.com/originals/ba/ed/da/baeddaa8a28ed4a71df79662ffbb15f6.gif') no-repeat center center fixed;
       background-size: cover;
-      font-family: 'Press Start 2P', cursive;
+      font-family: 'Press Start 2P', monospace;
       color: #baffc9;
       margin: 0;
       height: 100vh;
@@ -22,7 +25,8 @@
       height: 100%;
     }
 
-    .intro, .quiz {
+    .intro,
+    .quiz {
       background: rgba(0, 0, 0, 0.6);
       border: 2px solid #00ffe1;
       border-radius: 15px;
@@ -33,10 +37,18 @@
       text-align: center;
     }
 
+    #capitulo {
+      font-size: 28px;
+      color: #ffffff;
+      opacity: 0;
+      animation: fadeInOut 3s ease-in-out;
+    }
+
     .intro h1 {
       font-size: 40px;
       color: #00ffe1;
       text-shadow: 2px 2px 8px #000, 0 0 12px #00ffe1;
+      opacity: 0;
     }
 
     #typed-text {
@@ -45,6 +57,35 @@
       font-size: 20px;
       color: #c9fcff;
       text-shadow: 1px 1px 3px #000;
+      opacity: 0;
+    }
+
+    @keyframes fadeInOut {
+      0% {
+        opacity: 0;
+      }
+
+      20% {
+        opacity: 1;
+      }
+
+      80% {
+        opacity: 1;
+      }
+
+      100% {
+        opacity: 0;
+      }
+    }
+
+    @keyframes fadeInOnly {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
     }
 
     #quizContainer {
@@ -115,12 +156,14 @@
     }
   </style>
 </head>
+
 <body onclick="iniciarJogo()">
 
   <!-- Parte 1: Introdução -->
   <div class="container" id="introContainer">
     <div class="intro" id="introducao">
-      <h1>🌲 Floresta dos Pixels</h1>
+      <h2 id="capitulo">CAPÍTULO 1</h2>
+      <h1 id="titulo">🌲 Floresta dos Pixels</h1>
       <p id="typed-text"></p>
     </div>
   </div>
@@ -140,11 +183,16 @@
   </div>
 
   <script>
-    const texto = "As árvores pixeladas sussurram enigmas...\nClique em qualquer lugar para continuar.";
+    const capitulo = document.getElementById("capitulo");
+    const titulo = document.getElementById("titulo");
     const elementoTexto = document.getElementById("typed-text");
+
+    const texto = "As árvores pixeladas sussurram enigmas...\nClique em qualquer lugar para continuar.";
     let i = 0;
+    let iniciado = false;
 
     function digitar() {
+      elementoTexto.style.animation = "fadeInOnly 1s ease-in-out forwards";
       if (i < texto.length) {
         elementoTexto.innerHTML += texto.charAt(i);
         i++;
@@ -152,9 +200,20 @@
       }
     }
 
-    digitar();
+    window.onload = () => {
+      capitulo.style.animation = "fadeInOut 3s ease-in-out";
+      setTimeout(() => {
+        capitulo.style.display = "none";
+        titulo.style.animation = "fadeInOut 3s ease-in-out";
+        titulo.style.opacity = 1;
+      }, 3000);
 
-    let iniciado = false;
+      setTimeout(() => {
+        titulo.style.display = "none";
+        digitar();
+      }, 6000);
+    };
+
     function iniciarJogo() {
       if (!iniciado && i >= texto.length) {
         document.getElementById("introContainer").style.display = "none";
@@ -177,4 +236,5 @@
   </script>
 
 </body>
+
 </html>
