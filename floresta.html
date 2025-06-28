@@ -130,7 +130,7 @@
   </style>
 </head>
 
-<body onclick="iniciarJogo()">
+<body>
 
   <div class="container" id="introContainer">
     <div class="intro" id="introducao">
@@ -147,10 +147,15 @@
     </div>
   </div>
 
+  <!-- Setas -->
   <img src="https://img.icons8.com/ios-filled/100/long-arrow-right.png" id="setaMina" class="seta-visual"
-    style="bottom: 300px; right: 200px;">
+    style="bottom: 500px; right: 100px;">
   <img src="https://img.icons8.com/ios-filled/100/long-arrow-right.png" id="setaFloresta" class="seta-visual"
-    style="top: 40px; left: 60px; transform: rotate(270deg);">
+    style="top: 40px; left: 1000px; transform: rotate(270deg);">
+
+  <!-- Som de digitação -->
+  <audio id="type-sound" src="assets/typewriter-typing-68696.mp3" preload="auto"></audio>
+
   <script>
     const capitulo = document.getElementById("capitulo");
     const titulo = document.getElementById("titulo");
@@ -170,23 +175,34 @@
     let iIntro = 0;
     let iniciado = false;
 
+    const typeSound = document.getElementById("type-sound");
+    typeSound.volume = 0.2;
+
+    function tocarSomTecla(char) {
+      if (char !== " " && char !== "\n") {
+        typeSound.currentTime = 0;
+        typeSound.play();
+      }
+    }
+
     function digitarTexto(element, texto, indice, velocidade, callback) {
       if (indice < texto.length) {
-        element.style.opacity = "1"; element.innerHTML += texto.charAt(indice); setTimeout(() =>
-          digitarTexto(element, texto, indice + 1, velocidade, callback), velocidade);
+        const char = texto.charAt(indice);
+        element.style.opacity = "1";
+        element.innerHTML += char;
+        tocarSomTecla(char);
+
+        setTimeout(() => digitarTexto(element, texto, indice + 1, velocidade, callback), velocidade);
       } else if (callback) {
         callback();
       }
     }
 
     function digitarIntro() {
-      function digitarRec(element, texto, indice, velocidade) {
-        if (indice < texto.length) {
-          element.style.opacity = "1"; element.innerHTML += texto.charAt(indice); iIntro = indice +
-            1; setTimeout(() => digitarRec(element, texto, indice + 1, velocidade), velocidade);
-        }
-      }
-      digitarRec(textoIntroEl, textoIntro, 0, 40);
+      textoIntroEl.innerHTML = "";
+      digitarTexto(textoIntroEl, textoIntro, 0, 40, () => {
+        document.body.onclick = iniciarJogo;
+      });
     }
 
     function digitarQuiz() {
@@ -218,18 +234,18 @@
     };
 
     function iniciarJogo() {
-      if (!iniciado && iIntro >= textoIntro.length) {
+      if (!iniciado && textoIntroEl.innerHTML.length >= textoIntro.length) {
+        iniciado = true;
+        document.body.onclick = null;
         document.getElementById("introContainer").style.display = "none";
         quizContainer.style.display = "flex";
         document.body.style.cursor = "default";
-        iniciado = true;
         digitarQuiz();
       }
     }
 
     setaMina.addEventListener("mouseover", () => {
-      document.body.style.backgroundImage =
-        "url('https://i.pinimg.com/originals/23/95/54/2395544bff0ddf8217c28c645cf604e5.gif')";
+      document.body.style.backgroundImage = "url('https://i.pinimg.com/originals/23/95/54/2395544bff0ddf8217c28c645cf604e5.gif')";
     });
 
     setaMina.addEventListener("mouseout", () => {
@@ -241,8 +257,7 @@
     });
 
     setaFloresta.addEventListener("mouseover", () => {
-      document.body.style.backgroundImage =
-        "url('https://i.pinimg.com/originals/e3/97/5f/e3975fe301f9c6b8927c7934662d60e4.gif')";
+      document.body.style.backgroundImage = "url('https://i.pinimg.com/originals/e3/97/5f/e3975fe301f9c6b8927c7934662d60e4.gif')";
     });
 
     setaFloresta.addEventListener("mouseout", () => {
