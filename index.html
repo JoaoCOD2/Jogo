@@ -18,26 +18,29 @@
       background-size: cover;
       color: white;
       overflow: hidden;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      position: relative;
     }
+
     .botao-start {
-      font-size: 16px;
+      position: absolute;
+      bottom: 500px;
+      left: 25px;
+      
+      font-size: 45px;
       padding: 14px 36px;
-      color: rgb(255, 255, 255);
+      color: rgb(37, 39, 116);
       background: transparent;
-      border: 2px solid white;
       border-radius: 10px;
       transition: all 0.3s ease;
       user-select: none;
       font-family: 'Press Start 2P', monospace;
+      cursor: pointer;
     }
 
     .botao-start:hover {
-      background-color: rgba(250, 246, 0, 0.479);
+      background-color: rgb(250, 246, 0);
       color: black;
-      box-shadow: 0 0 18px #00ffe1;
+      box-shadow: 0 0 18px #00ffe1c0;
     }
 
     @keyframes fadeIn {
@@ -48,12 +51,12 @@
 </head>
 <body>
   <div class="tela-inicial">
-    <button class="botao-start" onclick="iniciarJogo()">START</button>
+    <h1 class="botao-start" onclick="iniciarJogo()">START</h1>
   </div>
 
   <script>
     function iniciarJogo() {
-      window.location.href = "floresta.html"; // Vai direto para o capítulo 1
+      window.location.href = "floresta.html"; 
     }
   </script>
 </body>

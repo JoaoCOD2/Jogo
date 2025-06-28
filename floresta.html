@@ -15,6 +15,7 @@
       height: 100vh;
       overflow: hidden;
       cursor: pointer;
+      transition: background-image 0.3s ease;
     }
 
     .container {
@@ -59,7 +60,6 @@
       opacity: 0;
     }
 
-    /* Estilo original do quiz */
     #quizContainer {
       display: none;
       flex-direction: column;
@@ -81,78 +81,18 @@
       line-height: 1.4em;
     }
 
-    a {
-      color: #00ffe1;
-      text-decoration: underline;
-    }
-
-    a:hover {
-      color: #ffffff;
-    }
-
-    .seta-direita,
-    .seta-cima {
-      position: fixed;
-      width: 50px;
-      height: 50px;
-      background-color: #111;
-      border: 2px solid #00ffe1;
-      border-radius: 50%;
-      box-shadow: 0 0 10px #00ffe1aa;
-      z-index: 1000;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      opacity: 0;
-      animation: none;
-    }
-
-    .seta-direita::before,
-    .seta-cima::before {
-      content: "";
-      display: block;
-      width: 0;
-      height: 0;
-      margin: auto;
+    .seta-visual {
       position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      border-style: solid;
+      width: 180px;
+      height: auto;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+      z-index: 10;
+      opacity: 0;
     }
 
-    .seta-direita {
-      top: 500px;
-      right: 40px;
-    }
-
-    .seta-direita::before {
-      border-width: 15px 0 15px 25px;
-      border-color: transparent transparent transparent #00ffe1;
-    }
-
-    .seta-cima {
-      top: 40px;
-      left: 50%;
-      transform: translateX(-50%);
-    }
-
-    .seta-cima::before {
-      border-width: 0 15px 25px 15px;
-      border-color: transparent transparent #00ffe1 transparent;
-    }
-
-    .seta-direita:hover,
-    .seta-cima:hover {
-      background-color: #00ffe1;
-      box-shadow: 0 0 20px #00ffe1;
-    }
-
-    .seta-direita:hover::before {
-      border-left-color: #000;
-    }
-
-    .seta-cima:hover::before {
-      border-bottom-color: #000;
+    .seta-visual:hover {
+      transform: scale(1.05);
     }
 
     .fade-in {
@@ -192,16 +132,14 @@
 
 <body onclick="iniciarJogo()">
 
-  <!-- Parte 1: Introdução -->
   <div class="container" id="introContainer">
     <div class="intro" id="introducao">
       <h2 id="capitulo">CAPÍTULO 1</h2>
-      <h1 id="titulo">🌲 Floresta dos Pixels</h1>
+      <h1 id="titulo">Floresta dos Pixels</h1>
       <p id="typed-text"></p>
     </div>
   </div>
 
-  <!-- Parte 2: Quiz estilizado com animação de digitação -->
   <div class="container" id="quizContainer">
     <div class="quiz">
       <h1 id="typed-title"></h1>
@@ -209,70 +147,62 @@
     </div>
   </div>
 
-  <!-- Setas flutuantes (ocultas até aparecerem) -->
-  <a href="seguir.html" class="seta-cima" id="setaCima" title="🌲 Explorar a Floresta"></a>
-  <a href="mina.html" class="seta-direita" id="setaDireita" title="⛏️ Ir para a Mina"></a>
-
+  <img src="https://img.icons8.com/ios-filled/100/long-arrow-right.png" id="setaMina" class="seta-visual"
+    style="bottom: 300px; right: 200px;">
+  <img src="https://img.icons8.com/ios-filled/100/long-arrow-right.png" id="setaFloresta" class="seta-visual"
+    style="top: 40px; left: 60px; transform: rotate(270deg);">
   <script>
-    // Elementos
     const capitulo = document.getElementById("capitulo");
     const titulo = document.getElementById("titulo");
     const textoIntroEl = document.getElementById("typed-text");
-
     const quizContainer = document.getElementById("quizContainer");
     const typedTitle = document.getElementById("typed-title");
     const typedParagraph = document.getElementById("typed-paragraph");
 
-    const setaCima = document.getElementById("setaCima");
-    const setaDireita = document.getElementById("setaDireita");
+    const setaMina = document.getElementById("setaMina");
+    const setaFloresta = document.getElementById("setaFloresta");
+    const fundoOriginal = document.body.style.backgroundImage;
 
-    // Textos
     const textoIntro = "As árvores pixeladas sussurram enigmas...\nClique em qualquer lugar para continuar.";
     const textoQuizTitle = "Dois caminhos surgem na trilha pixelada...";
     const textoQuizParagraph = "Você pode ouvir o eco de uma mina à direita, ou seguir pela floresta densa à frente.";
 
-    // Contadores
     let iIntro = 0;
-    let iQuizTitle = 0;
-    let iQuizParagraph = 0;
-
-    // Flags
     let iniciado = false;
 
-    // Função digitar texto genérico
     function digitarTexto(element, texto, indice, velocidade, callback) {
       if (indice < texto.length) {
-        element.style.opacity = "1";
-        element.innerHTML += texto.charAt(indice);
-        setTimeout(() => digitarTexto(element, texto, indice + 1, velocidade, callback), velocidade);
+        element.style.opacity = "1"; element.innerHTML += texto.charAt(indice); setTimeout(() =>
+          digitarTexto(element, texto, indice + 1, velocidade, callback), velocidade);
       } else if (callback) {
         callback();
       }
     }
 
-    // Função para iniciar digitação da intro
     function digitarIntro() {
-      digitarTexto(textoIntroEl, textoIntro, 0, 40, null);
+      function digitarRec(element, texto, indice, velocidade) {
+        if (indice < texto.length) {
+          element.style.opacity = "1"; element.innerHTML += texto.charAt(indice); iIntro = indice +
+            1; setTimeout(() => digitarRec(element, texto, indice + 1, velocidade), velocidade);
+        }
+      }
+      digitarRec(textoIntroEl, textoIntro, 0, 40);
     }
 
-    // Função para iniciar digitação do quiz (título e depois parágrafo)
     function digitarQuiz() {
       typedTitle.innerHTML = "";
       typedParagraph.innerHTML = "";
 
       digitarTexto(typedTitle, textoQuizTitle, 0, 40, () => {
-        // Pequena pausa antes do parágrafo começar
         setTimeout(() => {
           digitarTexto(typedParagraph, textoQuizParagraph, 0, 35, () => {
-            // Depois que terminar, mostrar setas com fade-in
-            setaCima.classList.add("fade-in");
-            setaDireita.classList.add("fade-in");
+            setaMina.classList.add("fade-in");
+            setaFloresta.classList.add("fade-in");
           });
         }, 300);
       });
     }
 
-    // Eventos
     window.onload = () => {
       capitulo.style.animation = "fadeInOut 3s ease-in-out";
       setTimeout(() => {
@@ -297,21 +227,31 @@
       }
     }
 
-    // Incrementa iIntro para permitir iniciarJogo()
-    // Para isso, monitoramos o progresso do texto da intro em digitarTexto()
-    // Como não temos callback para cada letra, vamos simular incremento:
-    // Substituímos digitarIntro para incrementar iIntro.
-    function digitarIntro() {
-      function digitarRec(element, texto, indice, velocidade) {
-        if (indice < texto.length) {
-          element.style.opacity = "1";
-          element.innerHTML += texto.charAt(indice);
-          iIntro = indice + 1;
-          setTimeout(() => digitarRec(element, texto, indice + 1, velocidade), velocidade);
-        }
-      }
-      digitarRec(textoIntroEl, textoIntro, 0, 40);
-    }
+    setaMina.addEventListener("mouseover", () => {
+      document.body.style.backgroundImage =
+        "url('https://i.pinimg.com/originals/23/95/54/2395544bff0ddf8217c28c645cf604e5.gif')";
+    });
+
+    setaMina.addEventListener("mouseout", () => {
+      document.body.style.backgroundImage = fundoOriginal;
+    });
+
+    setaMina.addEventListener("click", () => {
+      window.location.href = "mina.html";
+    });
+
+    setaFloresta.addEventListener("mouseover", () => {
+      document.body.style.backgroundImage =
+        "url('https://i.pinimg.com/originals/e3/97/5f/e3975fe301f9c6b8927c7934662d60e4.gif')";
+    });
+
+    setaFloresta.addEventListener("mouseout", () => {
+      document.body.style.backgroundImage = fundoOriginal;
+    });
+
+    setaFloresta.addEventListener("click", () => {
+      window.location.href = "seguir.html";
+    });
   </script>
 </body>
 
