@@ -1,21 +1,60 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Blocos Perdidos do Reino</title>
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="floresta.js">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'Press Start 2P', monospace;
+      background: url("assets/20250627_2140_Blocos Perdidos do Reino_remix_01jyszhd69ec4an0530srgfec8.png") no-repeat center center fixed;
+      background-size: cover;
+      color: white;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .botao-start {
+      font-size: 16px;
+      padding: 14px 36px;
+      color: rgb(255, 255, 255);
+      background: transparent;
+      border: 2px solid white;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+      user-select: none;
+      font-family: 'Press Start 2P', monospace;
+    }
+
+    .botao-start:hover {
+      background-color: rgba(250, 246, 0, 0.479);
+      color: black;
+      box-shadow: 0 0 18px #00ffe1;
+    }
+
+    @keyframes fadeIn {
+      from {opacity: 0;}
+      to {opacity: 1;}
+    }
+  </style>
 </head>
 <body>
-  <div class="container">
-    <h1>🟫 Blocos Perdidos do Reino</h1>
-    <p>Você despertou em um mundo corrompido. A Escuridão Cúbica espalha caos pelos biomas. Três blocos mágicos foram escondidos pelos antigos guardiões.</p>
-    <p>Escolha por onde começar sua missão:</p>
-    <ul>
-      <li><a href="floresta.html">🌲 Floresta dos Blocos</a></li>
-      <li><a href="mina.html">⛏️ Mina Sombria</a></li>
-      <li><a href="templo.html">🏛️ Templo do Código</a></li>
-    </ul>
+  <div class="tela-inicial">
+    <button class="botao-start" onclick="iniciarJogo()">START</button>
   </div>
+
+  <script>
+    function iniciarJogo() {
+      window.location.href = "floresta.html"; // Vai direto para o capítulo 1
+    }
+  </script>
 </body>
 </html>

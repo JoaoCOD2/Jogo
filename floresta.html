@@ -2,10 +2,9 @@
 <html lang="pt-br">
 
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Floresta dos Blocos</title>
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
   <style>
     body {
       background: url('https://i.pinimg.com/originals/ba/ed/da/baeddaa8a28ed4a71df79662ffbb15f6.gif') no-repeat center center fixed;
@@ -60,6 +59,107 @@
       opacity: 0;
     }
 
+    /* Estilo original do quiz */
+    #quizContainer {
+      display: none;
+      flex-direction: column;
+    }
+
+    #quizContainer h1 {
+      font-size: 28px;
+      color: #00ffe1;
+      margin-bottom: 30px;
+      text-shadow: 2px 2px 6px #000, 0 0 8px #00ffe1;
+    }
+
+    #quizContainer p {
+      font-size: 20px;
+      color: #c9fcff;
+      text-shadow: 1px 1px 3px #000;
+      margin: 0 auto;
+      max-width: 600px;
+      line-height: 1.4em;
+    }
+
+    a {
+      color: #00ffe1;
+      text-decoration: underline;
+    }
+
+    a:hover {
+      color: #ffffff;
+    }
+
+    .seta-direita,
+    .seta-cima {
+      position: fixed;
+      width: 50px;
+      height: 50px;
+      background-color: #111;
+      border: 2px solid #00ffe1;
+      border-radius: 50%;
+      box-shadow: 0 0 10px #00ffe1aa;
+      z-index: 1000;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      opacity: 0;
+      animation: none;
+    }
+
+    .seta-direita::before,
+    .seta-cima::before {
+      content: "";
+      display: block;
+      width: 0;
+      height: 0;
+      margin: auto;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border-style: solid;
+    }
+
+    .seta-direita {
+      top: 500px;
+      right: 40px;
+    }
+
+    .seta-direita::before {
+      border-width: 15px 0 15px 25px;
+      border-color: transparent transparent transparent #00ffe1;
+    }
+
+    .seta-cima {
+      top: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .seta-cima::before {
+      border-width: 0 15px 25px 15px;
+      border-color: transparent transparent #00ffe1 transparent;
+    }
+
+    .seta-direita:hover,
+    .seta-cima:hover {
+      background-color: #00ffe1;
+      box-shadow: 0 0 20px #00ffe1;
+    }
+
+    .seta-direita:hover::before {
+      border-left-color: #000;
+    }
+
+    .seta-cima:hover::before {
+      border-bottom-color: #000;
+    }
+
+    .fade-in {
+      animation: fadeInOnly 1s ease-in-out forwards;
+      opacity: 1 !important;
+    }
+
     @keyframes fadeInOut {
       0% {
         opacity: 0;
@@ -87,73 +187,6 @@
         opacity: 1;
       }
     }
-
-    #quizContainer {
-      display: none;
-    }
-
-    #quizContainer h1 {
-      font-size: 28px;
-      color: #00ffe1;
-      margin-bottom: 30px;
-      text-shadow: 2px 2px 6px #000, 0 0 8px #00ffe1;
-    }
-
-    .bloco-opcao {
-      display: inline-block;
-      width: 120px;
-      height: 120px;
-      margin: 15px;
-      line-height: 120px;
-      background-color: #111;
-      color: #fff;
-      font-size: 14px;
-      border: 2px solid #00ffe1;
-      border-radius: 8px;
-      box-shadow: 0 0 10px #00ffe1aa;
-      transition: all 0.3s ease;
-      background-size: cover;
-      background-position: center;
-      text-shadow: 1px 1px 2px #000;
-      cursor: pointer;
-    }
-
-    .bloco-opcao:hover {
-      transform: scale(1.1);
-      box-shadow: 0 0 20px #00ffe1;
-    }
-
-    .areia:hover {
-      background-image: url('https://i.imgur.com/7YROlmO.gif');
-    }
-
-    .madeira:hover {
-      background-image: url('https://i.imgur.com/9JkdYZZ.gif');
-    }
-
-    .pedra:hover {
-      background-image: url('https://i.imgur.com/HWmYmku.gif');
-    }
-
-    .carvao:hover {
-      background-image: url('https://i.imgur.com/BMSa4o4.gif');
-    }
-
-    #feedback {
-      margin-top: 30px;
-      font-size: 18px;
-      color: #ffffff;
-      text-shadow: 1px 1px 3px #000;
-    }
-
-    a {
-      color: #00ffe1;
-      text-decoration: underline;
-    }
-
-    a:hover {
-      color: #ffffff;
-    }
   </style>
 </head>
 
@@ -168,38 +201,78 @@
     </div>
   </div>
 
-  <!-- Parte 2: Quiz -->
+  <!-- Parte 2: Quiz estilizado com animação de digitação -->
   <div class="container" id="quizContainer">
     <div class="quiz">
-      <h1>“Qual bloco nasce da mistura de água com lava?”</h1>
-      <div id="blocos">
-        <div class="bloco-opcao areia" onclick="verificar('areia')">Areia</div>
-        <div class="bloco-opcao madeira" onclick="verificar('madeira')">Madeira</div>
-        <div class="bloco-opcao pedra" onclick="verificar('pedra')">Pedra</div>
-        <div class="bloco-opcao carvao" onclick="verificar('carvao')">Carvão</div>
-      </div>
-      <p id="feedback"></p>
+      <h1 id="typed-title"></h1>
+      <p id="typed-paragraph"></p>
     </div>
   </div>
 
+  <!-- Setas flutuantes (ocultas até aparecerem) -->
+  <a href="seguir.html" class="seta-cima" id="setaCima" title="🌲 Explorar a Floresta"></a>
+  <a href="mina.html" class="seta-direita" id="setaDireita" title="⛏️ Ir para a Mina"></a>
+
   <script>
+    // Elementos
     const capitulo = document.getElementById("capitulo");
     const titulo = document.getElementById("titulo");
-    const elementoTexto = document.getElementById("typed-text");
+    const textoIntroEl = document.getElementById("typed-text");
 
-    const texto = "As árvores pixeladas sussurram enigmas...\nClique em qualquer lugar para continuar.";
-    let i = 0;
+    const quizContainer = document.getElementById("quizContainer");
+    const typedTitle = document.getElementById("typed-title");
+    const typedParagraph = document.getElementById("typed-paragraph");
+
+    const setaCima = document.getElementById("setaCima");
+    const setaDireita = document.getElementById("setaDireita");
+
+    // Textos
+    const textoIntro = "As árvores pixeladas sussurram enigmas...\nClique em qualquer lugar para continuar.";
+    const textoQuizTitle = "Dois caminhos surgem na trilha pixelada...";
+    const textoQuizParagraph = "Você pode ouvir o eco de uma mina à direita, ou seguir pela floresta densa à frente.";
+
+    // Contadores
+    let iIntro = 0;
+    let iQuizTitle = 0;
+    let iQuizParagraph = 0;
+
+    // Flags
     let iniciado = false;
 
-    function digitar() {
-      elementoTexto.style.animation = "fadeInOnly 1s ease-in-out forwards";
-      if (i < texto.length) {
-        elementoTexto.innerHTML += texto.charAt(i);
-        i++;
-        setTimeout(digitar, 40);
+    // Função digitar texto genérico
+    function digitarTexto(element, texto, indice, velocidade, callback) {
+      if (indice < texto.length) {
+        element.style.opacity = "1";
+        element.innerHTML += texto.charAt(indice);
+        setTimeout(() => digitarTexto(element, texto, indice + 1, velocidade, callback), velocidade);
+      } else if (callback) {
+        callback();
       }
     }
 
+    // Função para iniciar digitação da intro
+    function digitarIntro() {
+      digitarTexto(textoIntroEl, textoIntro, 0, 40, null);
+    }
+
+    // Função para iniciar digitação do quiz (título e depois parágrafo)
+    function digitarQuiz() {
+      typedTitle.innerHTML = "";
+      typedParagraph.innerHTML = "";
+
+      digitarTexto(typedTitle, textoQuizTitle, 0, 40, () => {
+        // Pequena pausa antes do parágrafo começar
+        setTimeout(() => {
+          digitarTexto(typedParagraph, textoQuizParagraph, 0, 35, () => {
+            // Depois que terminar, mostrar setas com fade-in
+            setaCima.classList.add("fade-in");
+            setaDireita.classList.add("fade-in");
+          });
+        }, 300);
+      });
+    }
+
+    // Eventos
     window.onload = () => {
       capitulo.style.animation = "fadeInOut 3s ease-in-out";
       setTimeout(() => {
@@ -210,31 +283,36 @@
 
       setTimeout(() => {
         titulo.style.display = "none";
-        digitar();
+        digitarIntro();
       }, 6000);
     };
 
     function iniciarJogo() {
-      if (!iniciado && i >= texto.length) {
+      if (!iniciado && iIntro >= textoIntro.length) {
         document.getElementById("introContainer").style.display = "none";
-        document.getElementById("quizContainer").style.display = "flex";
+        quizContainer.style.display = "flex";
         document.body.style.cursor = "default";
         iniciado = true;
+        digitarQuiz();
       }
     }
 
-    function verificar(resposta) {
-      const feedback = document.getElementById("feedback");
-      if (resposta === "pedra") {
-        feedback.innerHTML = '✅ Você encontrou o Bloco da Resistência! <a href="mina.html">Ir para a Mina</a>';
-        feedback.style.color = "#00ffe1";
-      } else {
-        feedback.innerText = "❌ Resposta incorreta. Tente novamente.";
-        feedback.style.color = "red";
+    // Incrementa iIntro para permitir iniciarJogo()
+    // Para isso, monitoramos o progresso do texto da intro em digitarTexto()
+    // Como não temos callback para cada letra, vamos simular incremento:
+    // Substituímos digitarIntro para incrementar iIntro.
+    function digitarIntro() {
+      function digitarRec(element, texto, indice, velocidade) {
+        if (indice < texto.length) {
+          element.style.opacity = "1";
+          element.innerHTML += texto.charAt(indice);
+          iIntro = indice + 1;
+          setTimeout(() => digitarRec(element, texto, indice + 1, velocidade), velocidade);
+        }
       }
+      digitarRec(textoIntroEl, textoIntro, 0, 40);
     }
   </script>
-
 </body>
 
 </html>
