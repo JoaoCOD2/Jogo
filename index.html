@@ -20,6 +20,50 @@
       color: white;
     }
 
+    /* Tela de introdução com fundo preto */
+    #intro-screen {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: black;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      padding: 20px;
+      text-align: center;
+      color: #c9fcff;
+      z-index: 1000;
+    }
+
+    #intro-text {
+      font-size: 20px;
+      white-space: pre-wrap;
+      text-shadow: 1px 1px 3px #000;
+      min-height: 100px;
+      max-width: 600px;
+      margin-bottom: 40px;
+      opacity: 0;
+    }
+
+    #btn-continue {
+      display: none;
+      font-size: 28px;
+      padding: 12px 36px;
+      background: rgba(187, 255, 0, 0.9);
+      color: rgb(37, 39, 116);
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-family: 'Press Start 2P', monospace;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    #btn-continue:hover {
+      background-color: rgb(250, 246, 0);
+      color: black;
+      box-shadow: 0 0 18px #00ffe1c0;
+    }
+
     .titulo-jogo {
       position: absolute;
       top: 100px;
@@ -37,6 +81,7 @@
       pointer-events: none;
       user-select: none;
       animation: aparecerBounce 2s ease-out forwards;
+      display: none; /* esconde inicialmente */
     }
 
     @keyframes aparecerBounce {
@@ -56,16 +101,20 @@
 
     .botao-start {
       position: absolute;
-      bottom: 500px;
-      left: 25px;
-      font-size: 45px;
-      padding: 14px 36px;
+      bottom: 120px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 32px;
+      padding: 16px 40px;
       color: rgb(37, 39, 116);
-      background: transparent;
+      background: rgba(187, 255, 0, 0.9);
+      border: none;
       border-radius: 10px;
-      transition: all 0.3s ease;
       font-family: 'Press Start 2P', monospace;
       cursor: pointer;
+      transition: all 0.3s ease;
+      text-shadow: none;
+      display: none; /* esconde inicialmente */
     }
 
     .botao-start:hover {
@@ -76,7 +125,7 @@
 
     #audio-controls {
       position: fixed;
-      bottom: 100px;
+      bottom: 30px;
       left: 25px;
       background: rgba(255, 251, 0, 0.7);
       padding: 12px 16px;
@@ -94,7 +143,6 @@
       display: none;
       -webkit-appearance: none;
       appearance: none;
-      -moz-appearance: none;
       background: #ffffff;
       height: 8px;
       border-radius: 4px;
@@ -126,35 +174,117 @@
 </head>
 <body>
 
-  <div class="titulo-jogo">
-    LOST BLOCKS<br>OF THE<br>KINGDOM
+  <!-- Introdução com digitação -->
+  <div id="intro-screen">
+    <div id="intro-text"></div>
+    <button id="btn-continue">CONTINUAR</button>
   </div>
 
-  <div class="tela-inicial">
-    <h1 class="botao-start" onclick="iniciarJogo()">START</h1>
-  </div>
+  <!-- Menu principal -->
+  <div class="titulo-jogo" id="menu-title">LOST BLOCKS<br>OF THE<br>KINGDOM</div>
+  <button class="botao-start" id="btn-start">START</button>
 
   <!-- Música de fundo -->
-  <audio id="bg-music" autoplay loop>
-    <source src="assets/Brendon Moeller - Sunshine Rain.mp3" type="audio/mp3">
+  <audio id="bg-music" loop>
+    <source src="assets/Brendon Moeller - Sunshine Rain.mp3" type="audio/mp3" />
     Seu navegador não suporta áudio.
   </audio>
 
-  <!-- Controle de volume no estilo do jogo -->
+  <!-- Controle de volume -->
   <div id="audio-controls">
-    <img src="https://img.icons8.com/material-rounded/24/ffffff/speaker.png" class="audio-icon" id="volume-icon" alt="Volume">
-    <input type="range" id="volume-slider" min="0" max="1" step="0.01">
+    <img src="https://img.icons8.com/material-rounded/24/ffffff/speaker.png" class="audio-icon" id="volume-icon" alt="Volume" />
+    <input type="range" id="volume-slider" min="0" max="1" step="0.01" />
   </div>
 
   <script>
-    function iniciarJogo() {
-      window.location.href = "floresta.html";
+    const introScreen = document.getElementById('intro-screen');
+    const introText = document.getElementById('intro-text');
+    const btnContinue = document.getElementById('btn-continue');
+
+    const menuTitle = document.getElementById('menu-title');
+    const btnStart = document.getElementById('btn-start');
+
+    const music = document.getElementById('bg-music');
+    const volumeSlider = document.getElementById('volume-slider');
+    const volumeIcon = document.getElementById('volume-icon');
+
+    const introMessage = "Em um mundo esquecido, blocos antigos guardam um segredo...\nVocê é o escolhido para restaurar o equilíbrio.";
+
+    // Função digitar texto com efeito, som e callback no fim
+    function digitarTexto(element, texto, velocidade, callback) {
+      element.innerHTML = "";
+      element.style.opacity = "1";
+      let i = 0;
+
+      const typeSound = new Audio("assets/typing.mp3");
+      typeSound.volume = 0.15;
+
+      function tocarSom(char) {
+        if (char !== " " && char !== "\n") {
+          const somClone = typeSound.cloneNode();
+          somClone.volume = 0.15;
+          somClone.play();
+        }
+      }
+
+      function digitar() {
+        if (i < texto.length) {
+          const char = texto.charAt(i);
+          element.innerHTML += char;
+          tocarSom(char);
+          i++;
+          setTimeout(digitar, velocidade);
+        } else if (callback) {
+          callback();
+        }
+      }
+      digitar();
     }
 
-    const music = document.getElementById("bg-music");
-    const volumeSlider = document.getElementById("volume-slider");
-    const volumeIcon = document.getElementById("volume-icon");
+    // Quando a página carregar, começa a digitar o texto
+    window.onload = () => {
+      digitarTexto(introText, introMessage, 50, () => {
+        btnContinue.style.display = 'inline-block';
+      });
+    };
 
+    // Quando o usuário clicar em continuar:
+    btnContinue.onclick = () => {
+      // Fade out da introdução
+      introScreen.style.transition = 'opacity 1s ease';
+      introScreen.style.opacity = '0';
+
+      setTimeout(() => {
+        introScreen.style.display = 'none';
+
+        // Mostrar menu principal
+        menuTitle.style.display = 'block';
+        btnStart.style.display = 'block';
+        menuTitle.style.animation = 'aparecerBounce 2s ease-out forwards';
+
+        // Começar a música com fade in
+        music.volume = 0;
+        music.play();
+
+        let vol = 0;
+        const fadeInInterval = setInterval(() => {
+          if (vol < 0.3) {
+            vol += 0.01;
+            music.volume = vol;
+          } else {
+            clearInterval(fadeInInterval);
+            music.volume = 0.3;
+          }
+        }, 50);
+      }, 1000);
+    };
+
+    // Botão START para ir para o jogo
+    btnStart.onclick = () => {
+      window.location.href = "floresta.html";
+    };
+
+    // Controle volume
     volumeIcon.addEventListener("click", () => {
       volumeSlider.style.display = volumeSlider.style.display === "none" ? "inline" : "none";
     });
@@ -163,10 +293,10 @@
       music.volume = volumeSlider.value;
     });
 
-    // Volume inicial
-    music.volume = 0.3;
-    volumeSlider.value = 0.5;
+    // Inicializa volume do slider
+    document.addEventListener("DOMContentLoaded", () => {
+      volumeSlider.value = 0.3;
+    });
   </script>
-
 </body>
 </html>

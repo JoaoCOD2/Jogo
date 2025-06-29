@@ -154,120 +154,123 @@
     style="top: 40px; left: 1000px; transform: rotate(270deg);">
 
   <!-- Som de digitação -->
-  <audio id="type-sound" src="assets/typewriter-typing-68696.mp3" preload="auto"></audio>
+  <audio id="type-sound" src="assets/typing.mp3" preload="auto"></audio>
 
   <script>
-    const capitulo = document.getElementById("capitulo");
-    const titulo = document.getElementById("titulo");
-    const textoIntroEl = document.getElementById("typed-text");
-    const quizContainer = document.getElementById("quizContainer");
-    const typedTitle = document.getElementById("typed-title");
-    const typedParagraph = document.getElementById("typed-paragraph");
+  const capitulo = document.getElementById("capitulo");
+  const titulo = document.getElementById("titulo");
+  const textoIntroEl = document.getElementById("typed-text");
+  const quizContainer = document.getElementById("quizContainer");
+  const typedTitle = document.getElementById("typed-title");
+  const typedParagraph = document.getElementById("typed-paragraph");
 
-    const setaMina = document.getElementById("setaMina");
-    const setaFloresta = document.getElementById("setaFloresta");
-    const fundoOriginal = document.body.style.backgroundImage;
+  const setaMina = document.getElementById("setaMina");
+  const setaFloresta = document.getElementById("setaFloresta");
+  const fundoOriginal = document.body.style.backgroundImage;
 
-    const textoIntro = "As árvores pixeladas sussurram enigmas...\nClique em qualquer lugar para continuar.";
-    const textoQuizTitle = "Dois caminhos surgem na trilha pixelada...";
-    const textoQuizParagraph = "Você pode ouvir o eco de uma mina à direita, ou seguir pela floresta densa à frente.";
+  const textoIntro = "As árvores pixeladas sussurram enigmas...\nClique em qualquer lugar para continuar.";
+  const textoQuizTitle = "Dois caminhos surgem na trilha pixelada...";
+  const textoQuizParagraph = "Você pode ouvir o eco de uma mina à direita, ou seguir pela floresta densa à frente.";
 
-    let iIntro = 0;
-    let iniciado = false;
+  let iniciado = false;
 
-    const typeSound = document.getElementById("type-sound");
-    typeSound.volume = 0.2;
+  const typeSound = document.getElementById("type-sound");
+  typeSound.volume = 0.2;
 
-    function tocarSomTecla(char) {
-      if (char !== " " && char !== "\n") {
-        typeSound.currentTime = 0;
-        typeSound.play();
-      }
+  // Função corrigida para permitir múltiplos sons simultâneos
+  function tocarSomTecla(char) {
+    if (char !== " " && char !== "\n") {
+      const somClone = typeSound.cloneNode();
+      somClone.volume = 0.2;
+      somClone.play();
     }
+  }
 
-    function digitarTexto(element, texto, indice, velocidade, callback) {
-      if (indice < texto.length) {
-        const char = texto.charAt(indice);
-        element.style.opacity = "1";
-        element.innerHTML += char;
-        tocarSomTecla(char);
+  // Função de digitação com som sincronizado
+  function digitarTexto(element, texto, indice, velocidade, callback) {
+    if (indice < texto.length) {
+      const char = texto.charAt(indice);
+      element.style.opacity = "1";
+      element.innerHTML += char;
+      tocarSomTecla(char);
 
-        setTimeout(() => digitarTexto(element, texto, indice + 1, velocidade, callback), velocidade);
-      } else if (callback) {
-        callback();
-      }
+      setTimeout(() => digitarTexto(element, texto, indice + 1, velocidade, callback), velocidade);
+    } else if (callback) {
+      callback();
     }
+  }
 
-    function digitarIntro() {
-      textoIntroEl.innerHTML = "";
-      digitarTexto(textoIntroEl, textoIntro, 0, 40, () => {
-        document.body.onclick = iniciarJogo;
-      });
-    }
+  function digitarIntro() {
+    textoIntroEl.innerHTML = "";
+    digitarTexto(textoIntroEl, textoIntro, 0, 40, () => {
+      document.body.onclick = iniciarJogo;
+    });
+  }
 
-    function digitarQuiz() {
-      typedTitle.innerHTML = "";
-      typedParagraph.innerHTML = "";
+  function digitarQuiz() {
+    typedTitle.innerHTML = "";
+    typedParagraph.innerHTML = "";
 
-      digitarTexto(typedTitle, textoQuizTitle, 0, 40, () => {
-        setTimeout(() => {
-          digitarTexto(typedParagraph, textoQuizParagraph, 0, 35, () => {
-            setaMina.classList.add("fade-in");
-            setaFloresta.classList.add("fade-in");
-          });
-        }, 300);
-      });
-    }
-
-    window.onload = () => {
-      capitulo.style.animation = "fadeInOut 3s ease-in-out";
+    digitarTexto(typedTitle, textoQuizTitle, 0, 40, () => {
       setTimeout(() => {
-        capitulo.style.display = "none";
-        titulo.style.animation = "fadeInOut 3s ease-in-out";
-        titulo.style.opacity = 1;
-      }, 3000);
+        digitarTexto(typedParagraph, textoQuizParagraph, 0, 35, () => {
+          setaMina.classList.add("fade-in");
+          setaFloresta.classList.add("fade-in");
+        });
+      }, 300);
+    });
+  }
 
-      setTimeout(() => {
-        titulo.style.display = "none";
-        digitarIntro();
-      }, 6000);
-    };
+  window.onload = () => {
+    capitulo.style.animation = "fadeInOut 3s ease-in-out";
+    setTimeout(() => {
+      capitulo.style.display = "none";
+      titulo.style.animation = "fadeInOut 3s ease-in-out";
+      titulo.style.opacity = 1;
+    }, 3000);
 
-    function iniciarJogo() {
-      if (!iniciado && textoIntroEl.innerHTML.length >= textoIntro.length) {
-        iniciado = true;
-        document.body.onclick = null;
-        document.getElementById("introContainer").style.display = "none";
-        quizContainer.style.display = "flex";
-        document.body.style.cursor = "default";
-        digitarQuiz();
-      }
+    setTimeout(() => {
+      titulo.style.display = "none";
+      digitarIntro();
+    }, 6000);
+  };
+
+  function iniciarJogo() {
+    if (!iniciado && textoIntroEl.innerHTML.length >= textoIntro.length) {
+      iniciado = true;
+      document.body.onclick = null;
+      document.getElementById("introContainer").style.display = "none";
+      quizContainer.style.display = "flex";
+      document.body.style.cursor = "default";
+      digitarQuiz();
     }
+  }
 
-    setaMina.addEventListener("mouseover", () => {
-      document.body.style.backgroundImage = "url('https://i.pinimg.com/originals/23/95/54/2395544bff0ddf8217c28c645cf604e5.gif')";
-    });
+  setaMina.addEventListener("mouseover", () => {
+    document.body.style.backgroundImage = "url('https://i.pinimg.com/originals/23/95/54/2395544bff0ddf8217c28c645cf604e5.gif')";
+  });
 
-    setaMina.addEventListener("mouseout", () => {
-      document.body.style.backgroundImage = fundoOriginal;
-    });
+  setaMina.addEventListener("mouseout", () => {
+    document.body.style.backgroundImage = fundoOriginal;
+  });
 
-    setaMina.addEventListener("click", () => {
-      window.location.href = "mina.html";
-    });
+  setaMina.addEventListener("click", () => {
+    window.location.href = "mina.html";
+  });
 
-    setaFloresta.addEventListener("mouseover", () => {
-      document.body.style.backgroundImage = "url('https://i.pinimg.com/originals/e3/97/5f/e3975fe301f9c6b8927c7934662d60e4.gif')";
-    });
+  setaFloresta.addEventListener("mouseover", () => {
+    document.body.style.backgroundImage = "url('https://i.pinimg.com/originals/e3/97/5f/e3975fe301f9c6b8927c7934662d60e4.gif')";
+  });
 
-    setaFloresta.addEventListener("mouseout", () => {
-      document.body.style.backgroundImage = fundoOriginal;
-    });
+  setaFloresta.addEventListener("mouseout", () => {
+    document.body.style.backgroundImage = fundoOriginal;
+  });
 
-    setaFloresta.addEventListener("click", () => {
-      window.location.href = "seguir.html";
-    });
-  </script>
+  setaFloresta.addEventListener("click", () => {
+    window.location.href = "seguir.html";
+  });
+</script>
+
 </body>
 
 </html>
