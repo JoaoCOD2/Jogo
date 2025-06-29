@@ -37,20 +37,6 @@
       text-align: center;
     }
 
-    #capitulo {
-      font-size: 28px;
-      color: #ffffff;
-      opacity: 0;
-      animation: fadeInOut 3s ease-in-out;
-    }
-
-    .intro h1 {
-      font-size: 40px;
-      color: #00ffe1;
-      text-shadow: 2px 2px 8px #000, 0 0 12px #00ffe1;
-      opacity: 0;
-    }
-
     #typed-text {
       white-space: pre-wrap;
       display: inline-block;
@@ -58,6 +44,9 @@
       color: #c9fcff;
       text-shadow: 1px 1px 3px #000;
       opacity: 0;
+      user-select: none;
+      min-height: 80px;
+      margin-top: 15px;
     }
 
     #quizContainer {
@@ -100,24 +89,6 @@
       opacity: 1 !important;
     }
 
-    @keyframes fadeInOut {
-      0% {
-        opacity: 0;
-      }
-
-      20% {
-        opacity: 1;
-      }
-
-      80% {
-        opacity: 1;
-      }
-
-      100% {
-        opacity: 0;
-      }
-    }
-
     @keyframes fadeInOnly {
       from {
         opacity: 0;
@@ -127,15 +98,49 @@
         opacity: 1;
       }
     }
+
+    /* INTRODUÇÃO EM TELA PRETA */
+    #telaPretaIntro {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      background: black;
+      color: #00ffe1;
+      font-family: 'Press Start 2P', monospace;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      opacity: 1;
+      transition: opacity 2s ease;
+    }
+
+    #telaPretaIntro h2,
+    #telaPretaIntro h1 {
+      opacity: 0;
+      transition: opacity 2s ease;
+    }
+
+    #telaPretaIntro h2.mostrar,
+    #telaPretaIntro h1.mostrar {
+      opacity: 1;
+    }
   </style>
 </head>
 
 <body>
 
+  <!-- INTRODUÇÃO EM TELA PRETA -->
+  <div id="telaPretaIntro">
+    <h2 id="introCap">CAPÍTULO 1</h2>
+    <h1 id="introTitulo" style="display: none;">Floresta dos Pixels</h1>
+  </div>
+
   <div class="container" id="introContainer">
     <div class="intro" id="introducao">
-      <h2 id="capitulo">CAPÍTULO 1</h2>
-      <h1 id="titulo">Floresta dos Pixels</h1>
       <p id="typed-text"></p>
     </div>
   </div>
@@ -157,119 +162,160 @@
   <audio id="type-sound" src="assets/typing.mp3" preload="auto"></audio>
 
   <script>
-  const capitulo = document.getElementById("capitulo");
-  const titulo = document.getElementById("titulo");
-  const textoIntroEl = document.getElementById("typed-text");
-  const quizContainer = document.getElementById("quizContainer");
-  const typedTitle = document.getElementById("typed-title");
-  const typedParagraph = document.getElementById("typed-paragraph");
+    const textoIntroEl = document.getElementById("typed-text");
+    const quizContainer = document.getElementById("quizContainer");
+    const typedTitle = document.getElementById("typed-title");
+    const typedParagraph = document.getElementById("typed-paragraph");
 
-  const setaMina = document.getElementById("setaMina");
-  const setaFloresta = document.getElementById("setaFloresta");
-  const fundoOriginal = document.body.style.backgroundImage;
+    const setaMina = document.getElementById("setaMina");
+    const setaFloresta = document.getElementById("setaFloresta");
+    const fundoOriginal = document.body.style.backgroundImage;
 
-  const textoIntro = "As árvores pixeladas sussurram enigmas...\nClique em qualquer lugar para continuar.";
-  const textoQuizTitle = "Dois caminhos surgem na trilha pixelada...";
-  const textoQuizParagraph = "Você pode ouvir o eco de uma mina à direita, ou seguir pela floresta densa à frente.";
+    const textoQuizTitle = "Dois caminhos surgem na trilha pixelada...";
+    const textoQuizParagraph = "Você pode ouvir o eco de uma mina à direita, ou seguir pela floresta densa à frente.";
 
-  let iniciado = false;
+    let iniciado = false;
 
-  const typeSound = document.getElementById("type-sound");
-  typeSound.volume = 0.2;
+    const typeSound = document.getElementById("type-sound");
+    typeSound.volume = 0.2;
 
-  // Função corrigida para permitir múltiplos sons simultâneos
-  function tocarSomTecla(char) {
-    if (char !== " " && char !== "\n") {
-      const somClone = typeSound.cloneNode();
-      somClone.volume = 0.2;
-      somClone.play();
+    function tocarSomTecla(char) {
+      if (char !== " " && char !== "\n") {
+        const somClone = typeSound.cloneNode();
+        somClone.volume = 0.2;
+        somClone.play();
+      }
     }
-  }
 
-  // Função de digitação com som sincronizado
-  function digitarTexto(element, texto, indice, velocidade, callback) {
-    if (indice < texto.length) {
-      const char = texto.charAt(indice);
-      element.style.opacity = "1";
-      element.innerHTML += char;
-      tocarSomTecla(char);
+    function digitarTexto(element, texto, indice, velocidade, callback) {
+      if (indice < texto.length) {
+        const char = texto.charAt(indice);
+        element.style.opacity = "1";
+        element.innerHTML += char === "\n" ? "<br>" : char;
+        tocarSomTecla(char);
 
-      setTimeout(() => digitarTexto(element, texto, indice + 1, velocidade, callback), velocidade);
-    } else if (callback) {
-      callback();
+        setTimeout(() => digitarTexto(element, texto, indice + 1, velocidade, callback), velocidade);
+      } else if (callback) {
+        callback();
+      }
     }
-  }
 
-  function digitarIntro() {
-    textoIntroEl.innerHTML = "";
-    digitarTexto(textoIntroEl, textoIntro, 0, 40, () => {
-      document.body.onclick = iniciarJogo;
-    });
-  }
+    // Função digitarIntro atualizada para textos em sequência
+    function digitarIntro() {
+      textoIntroEl.innerHTML = "";
+      textoIntroEl.style.opacity = "0";
 
-  function digitarQuiz() {
-    typedTitle.innerHTML = "";
-    typedParagraph.innerHTML = "";
+      const textos = [
+        "Você desperta em uma clareira cercada por árvores altas.",
+        "O céu pixelado brilha com um sol que se move lentamente. O portal que o trouxe até aqui desapareceu sem deixar vestígios.",
+        "A grama sob seus pés é macia, e ao seu lado repousa um livro antigo. A capa está desgastada, mas as palavras brilham com leveza quando você o abre:",
+        `“Três Cristais mantêm o mundo em equilíbrio.\nCriação, Ordem, Caos.\nQuando unidos, a magia renasce.\nQuando separados, a ruína se espalha.\nAquele que reunir os Três Cristais trará de volta a magia esquecida e abrirá o caminho de volta para casa.”`,
+        "Você levanta!"
+      ];
 
-    digitarTexto(typedTitle, textoQuizTitle, 0, 40, () => {
+      let index = 0;
+
+      function digitarProximoTexto() {
+        if (index < textos.length) {
+          textoIntroEl.innerHTML = "";
+          digitarTexto(textoIntroEl, textos[index], 0, 40, () => {
+            index++;
+            setTimeout(digitarProximoTexto, 1800);
+          });
+        } else {
+          document.body.onclick = iniciarJogo; // ativar clique para iniciar jogo
+        }
+      }
+
       setTimeout(() => {
-        digitarTexto(typedParagraph, textoQuizParagraph, 0, 35, () => {
-          setaMina.classList.add("fade-in");
-          setaFloresta.classList.add("fade-in");
-        });
-      }, 300);
-    });
-  }
-
-  window.onload = () => {
-    capitulo.style.animation = "fadeInOut 3s ease-in-out";
-    setTimeout(() => {
-      capitulo.style.display = "none";
-      titulo.style.animation = "fadeInOut 3s ease-in-out";
-      titulo.style.opacity = 1;
-    }, 3000);
-
-    setTimeout(() => {
-      titulo.style.display = "none";
-      digitarIntro();
-    }, 6000);
-  };
-
-  function iniciarJogo() {
-    if (!iniciado && textoIntroEl.innerHTML.length >= textoIntro.length) {
-      iniciado = true;
-      document.body.onclick = null;
-      document.getElementById("introContainer").style.display = "none";
-      quizContainer.style.display = "flex";
-      document.body.style.cursor = "default";
-      digitarQuiz();
+        textoIntroEl.style.transition = "opacity 1.5s ease";
+        textoIntroEl.style.opacity = "1";
+        digitarProximoTexto();
+      }, 200);
     }
-  }
 
-  setaMina.addEventListener("mouseover", () => {
-    document.body.style.backgroundImage = "url('https://i.pinimg.com/originals/23/95/54/2395544bff0ddf8217c28c645cf604e5.gif')";
-  });
+    function digitarQuiz() {
+      typedTitle.innerHTML = "";
+      typedParagraph.innerHTML = "";
 
-  setaMina.addEventListener("mouseout", () => {
-    document.body.style.backgroundImage = fundoOriginal;
-  });
+      digitarTexto(typedTitle, textoQuizTitle, 0, 40, () => {
+        setTimeout(() => {
+          digitarTexto(typedParagraph, textoQuizParagraph, 0, 35, () => {
+            setaMina.classList.add("fade-in");
+            setaFloresta.classList.add("fade-in");
+          });
+        }, 300);
+      });
+    }
 
-  setaMina.addEventListener("click", () => {
-    window.location.href = "mina.html";
-  });
+    function iniciarJogo() {
+      if (!iniciado && textoIntroEl.innerHTML.length > 0) {
+        iniciado = true;
+        document.body.onclick = null;
+        document.getElementById("introContainer").style.display = "none";
+        quizContainer.style.display = "flex";
+        document.body.style.cursor = "default";
+        digitarQuiz();
+      }
+    }
 
-  setaFloresta.addEventListener("mouseover", () => {
-    document.body.style.backgroundImage = "url('https://i.pinimg.com/originals/e3/97/5f/e3975fe301f9c6b8927c7934662d60e4.gif')";
-  });
+    setaMina.addEventListener("mouseover", () => {
+      document.body.style.backgroundImage = "url('https://i.pinimg.com/originals/23/95/54/2395544bff0ddf8217c28c645cf604e5.gif')";
+    });
 
-  setaFloresta.addEventListener("mouseout", () => {
-    document.body.style.backgroundImage = fundoOriginal;
-  });
+    setaMina.addEventListener("mouseout", () => {
+      document.body.style.backgroundImage = fundoOriginal;
+    });
 
-  setaFloresta.addEventListener("click", () => {
-    window.location.href = "seguir.html";
-  });
-</script>
+    setaMina.addEventListener("click", () => {
+      window.location.href = "mina.html";
+    });
+
+    setaFloresta.addEventListener("mouseover", () => {
+      document.body.style.backgroundImage = "url('https://i.pinimg.com/originals/e3/97/5f/e3975fe301f9c6b8927c7934662d60e4.gif')";
+    });
+
+    setaFloresta.addEventListener("mouseout", () => {
+      document.body.style.backgroundImage = fundoOriginal;
+    });
+
+    setaFloresta.addEventListener("click", () => {
+      window.location.href = "seguir.html";
+    });
+
+    // INTRODUÇÃO COM SEQUÊNCIA AJUSTADA
+    window.addEventListener("load", () => {
+      const telaPreta = document.getElementById("telaPretaIntro");
+      const cap = document.getElementById("introCap");
+      const titulo = document.getElementById("introTitulo");
+
+      cap.classList.add("mostrar");
+
+      setTimeout(() => {
+        cap.classList.remove("mostrar");
+
+        // Após o fade-out, esconde completamente
+        setTimeout(() => {
+          cap.style.display = "none";
+
+          // Agora mostra "Floresta dos Pixels"
+          titulo.style.display = "block";
+          titulo.classList.add("mostrar");
+
+          // E depois começa o fade-out da tela preta
+          setTimeout(() => {
+            telaPreta.style.opacity = "0";
+
+            setTimeout(() => {
+              telaPreta.style.display = "none";
+              digitarIntro();
+            }, 2000);
+          }, 2500);
+
+        }, 500); // Aguarda o fade-out antes de esconder
+      }, 2000); // Tempo do fade-in do "CAPÍTULO 1"
+    });
+  </script>
 
 </body>
 
