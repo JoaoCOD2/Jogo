@@ -1,32 +1,856 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
-  <meta charset="UTF-8">
-  <title>Mina Sombria</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <div class="container">
-    <h1>⛏️ Mina Sombria</h1>
-    <p>Você entra na escuridão da mina. Um som ecoa com uma sequência:</p>
-    <blockquote>“Gravel, Stone, Cobblestone, ???”</blockquote>
-    <p>Qual bloco vem a seguir?</p>
-    <input type="text" id="resposta" placeholder="Digite sua resposta">
-    <button onclick="verificar()">Responder</button>
-    <p id="feedback"></p>
-  </div>
-  <script>
-    function verificar() {
-      const resposta = document.getElementById("resposta").value.toLowerCase().trim();
-      const feedback = document.getElementById("feedback");
-      if (resposta === "andesito" || resposta === "andesite") {
-        feedback.innerHTML = '✅ Você achou o Bloco da Força! <a href="templo.html">Ir para o Templo</a>';
-        feedback.style.color = "lightgreen";
-      } else {
-        feedback.innerText = "❌ Bloco errado. Tente de novo.";
-        feedback.style.color = "red";
+  <meta charset="UTF-8" />
+  <title>Mina Sombria - Pixel Edition</title>
+  <style>
+    /* Estilo principal com tema pixel art */
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+    
+    :root {
+      --primary-color: #6ecff6;
+      --secondary-color: #a64ac9;
+      --danger-color: #f8485e;
+      --success-color: #17b978;
+      --warning-color: #f8d210;
+      --dark-color: #1a1a2e;
+      --light-color: #e6e6e6;
+    }
+
+    body {
+      background-color: var(--dark-color);
+      color: var(--light-color);
+      font-family: 'Press Start 2P', cursive;
+      line-height: 1.6;
+      text-align: center;
+      margin: 0;
+      padding: 20px;
+      background-image: 
+        radial-gradient(circle at 25% 25%, rgba(255,255,255,0.05) 1px, transparent 1px),
+        radial-gradient(circle at 75% 75%, rgba(255,255,255,0.05) 1px, transparent 1px);
+      background-size: 20px 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: rgba(0, 0, 0, 0.7);
+      border: 4px solid var(--primary-color);
+      border-radius: 0;
+      box-shadow: 
+        0 0 0 4px var(--secondary-color),
+        0 0 20px rgba(0, 0, 0, 0.8);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .container::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary-color), var(--secondary-color), var(--primary-color));
+      animation: borderEffect 2s linear infinite;
+    }
+
+    @keyframes borderEffect {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 100% 50%; }
+    }
+
+    h1 {
+      color: var(--primary-color);
+      text-shadow: 3px 3px 0 var(--secondary-color);
+      margin-bottom: 30px;
+      font-size: 24px;
+      letter-spacing: 2px;
+    }
+
+    /* Estilo para os blocos de pedra/diamante */
+    .pedra, .diamante {
+      width: 64px;
+      height: 64px;
+      display: inline-block;
+      margin: 6px;
+      border-radius: 0;
+      cursor: pointer;
+      border: 3px solid #222;
+      transition: all 0.3s ease;
+      position: relative;
+      vertical-align: middle;
+      user-select: none;
+      box-shadow: 
+        4px 4px 0 rgba(0, 0, 0, 0.3),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+      image-rendering: pixelated;
+    }
+
+    .pedra {
+      background-color: #444;
+    }
+
+    .diamante {
+      background-color: #39f;
+    }
+
+    .pedra:hover, .diamante:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 
+        6px 6px 0 rgba(0, 0, 0, 0.3),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.3);
+    }
+
+    .pedra img, .diamante img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      pointer-events: none;
+      user-select: none;
+      image-rendering: pixelated;
+    }
+
+    /* Efeito de quebrar (animação) */
+    .quebrando {
+      animation: quebrarAnim 0.5s forwards;
+      pointer-events: none;
+    }
+
+    @keyframes quebrarAnim {
+      0% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+      }
+      50% {
+        transform: scale(1.1) rotate(10deg);
+        opacity: 0.8;
+      }
+      100% {
+        transform: scale(0) rotate(45deg);
+        opacity: 0;
       }
     }
+
+    /* Temporizadores e contadores */
+    #timer, #timer2, #timer3 {
+      font-size: 16px;
+      color: var(--warning-color);
+      margin-bottom: 15px;
+      text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
+      letter-spacing: 1px;
+    }
+
+    #contador, #contador2, #contador3, #contadorDiamante {
+      margin-bottom: 20px;
+      color: var(--light-color);
+      text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
+    }
+
+    /* Seções do jogo */
+    #game, #enigma, #game2, #enigmaFerro, 
+    #game3, #fight, #enigmaDiamante, 
+    #gameDiamante, #gameover, #finalMessage, 
+    #defeatMessage {
+      margin: 20px 0;
+      padding: 15px;
+      background-color: rgba(0, 0, 0, 0.5);
+      border: 2px solid var(--secondary-color);
+    }
+
+    #game2, #enigma, #enigmaFerro, 
+    #game3, #fight, #enigmaDiamante, 
+    #gameDiamante, #gameover, #finalMessage, 
+    #defeatMessage {
+      display: none;
+    }
+
+    /* Mensagens de game over */
+    #gameover, #defeatMessage {
+      color: var(--danger-color);
+      text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
+    }
+
+    #gameover p, #defeatMessage p {
+      font-size: 18px;
+      margin-bottom: 20px;
+    }
+
+    /* Botões */
+    button {
+      background-color: var(--secondary-color);
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      font-family: 'Press Start 2P', cursive;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.3);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    button:hover {
+      background-color: var(--primary-color);
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0 rgba(0, 0, 0,  ️0.3);
+    }
+
+    button:active {
+      transform: translate(1px, 1px);
+      box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.3);
+    }
+
+    button.attack-btn {
+      background-color: var(--danger-color);
+    }
+
+    button.attack-btn:hover {
+      background-color: #d6304d;
+    }
+
+    /* Inputs */
+    input {
+      background-color: rgba(0, 0, 0, 0.5);
+      border: 2px solid var(--primary-color);
+      color: white;
+      padding: 10px;
+      font-family: 'Press Start 2P', cursive;
+      font-size: 14px;
+      width: 80%;
+      margin: 10px 0;
+      text-align: center;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: var(--secondary-color);
+    }
+
+    /* Feedback */
+    #feedback, #feedbackFerro, #feedbackDiamante, #resultadoLuta {
+      margin-top: 15px;
+      font-size: 14px;
+      min-height: 20px;
+    }
+
+    /* Displays de vida */
+    #vidaJogador, #vidaZumbi {
+      color: var(--success-color);
+      font-weight: bold;
+    }
+
+    /* Imagem do zumbi */
+    #zombie-img {
+      width: 150px;
+      margin: 10px 0;
+      image-rendering: pixelated;
+      filter: drop-shadow(0 0 5px rgba(255, 0, 0, 0.5));
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    /* Link final */
+    a {
+      color: var(--success-color);
+      text-decoration: none;
+      padding: 10px 20px;
+      border: 2px solid var(--success-color);
+      display: inline-block;
+      margin-top: 20px;
+      transition: all 0.3s ease;
+    }
+
+    a:hover {
+      background-color: var(--success-color);
+      color: black;
+      transform: translate(-2px, -2px);
+      box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.3);
+    }
+
+    /* Responsivo */
+    @media (max-width: 600px) {
+      .container {
+        padding: 10px;
+      }
+      
+      h1 {
+        font-size: 18px;
+      }
+      
+      .pedra, .diamante {
+        width: 50px;
+        height: 50px;
+        margin: 4px;
+      }
+      
+      button {
+        padding: 8px 16px;
+        font-size: 12px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>MINA SOMBRIA - PIXEL EDITION</h1>
+
+    <!-- Minigame 1 -->
+    <div id="game">
+      <p id="timer">TEMPO: 40s</p>
+      <p>QUEBRE AS PEDRAS DO CAMINHO:</p>
+      <p id="contador">PEDRAS: 0/9</p>
+      <div>
+        <div class="pedra" onclick="quebrar(this, 1)">
+          <img src="https://placehold.co/64x64/555/222?text=STONE" alt="Pixel art style stone block" />
+        </div>
+        <div class="pedra" onclick="quebrar(this, 1)">
+          <img src="https://placehold.co/64x64/555/222?text=STONE" alt="Pixel art style stone block" />
+        </div>
+        <div class="pedra" onclick="quebrar(this, 1)">
+          <img src="https://placehold.co/64x64/555/222?text=STONE" alt="Pixel art style stone block" />
+        </div>
+        <div class="pedra" onclick="quebrar(this, 1)">
+          <img src="https://placehold.co/64x64/555/222?text=STONE" alt="Pixel art style stone block" />
+        </div>
+        <div class="pedra" onclick="quebrar(this, 1)">
+          <img src="https://placehold.co/64x64/555/222?text=STONE" alt="Pixel art style stone block" />
+        </div>
+        <div class="pedra" onclick="quebrar(this, 1)">
+          <img src="https://placehold.co/64x64/555/222?text=STONE" alt="Pixel art style stone block" />
+        </div>
+        <div class="pedra" onclick="quebrar(this, 1)">
+          <img src="https://placehold.co/64x64/555/222?text=STONE" alt="Pixel art style stone block" />
+        </div>
+        <div class="pedra" onclick="quebrar(this, 1)">
+          <img src="https://placehold.co/64x64/555/222?text=STONE" alt="Pixel art style stone block" />
+        </div>
+        <div class="pedra" onclick="quebrar(this, 1)">
+          <img src="https://placehold.co/64x64/555/222?text=STONE" alt="Pixel art style stone block" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Game Over -->
+    <div id="gameover">
+      <p>TEMPO ESGOTADO!</p>
+      <p>Você não conseguiu quebrar todas as pedras a tempo.</p>
+      <button onclick="reiniciarJogo()">REINICIAR</button>
+    </div>
+
+    <!-- Enigma Carvão -->
+    <div id="enigma">
+      <p>VOCÊ ENCONTRA UM ENIGMA:</p>
+      <blockquote>“Qual bloco nasce no escuro, se usa na fornalha para queimar itens e mancha os dedos de preto?”</blockquote>
+      <input type="text" id="resposta" placeholder="Digite sua resposta" />
+      <br />
+      <button onclick="verificar()">RESPONDER</button>
+      <p id="feedback"></p>
+    </div>
+
+    <!-- Minigame 2 -->
+    <div id="game2">
+      <p id="timer2">TEMPO: 40s</p>
+      <p>QUEBRE AS PEDRAS DO CAMINHO:</p>
+      <p id="contador2">PEDRAS: 0/9</p>
+      <div>
+        <div class="pedra" onclick="quebrar(this, 2)">
+          <img src="https://placehold.co/64x64/555/222?text=STONE" alt="Pixel art style stone block" />
+        </div>
+        <div class="pedra" onclick="quebrar(this, 2)">
+          <img src="https://placehold.co/64x64/555/222?text=STONE" alt="Pixel art style stone block" />
+        </div>
+        <div class="pedra" onclick="quebrar(this, 2)">
+          <img src="https://placehold.co/64x64/555/222?text=STONE" alt="Pixel art style stone block" />
+        </div>
+        <div class="pedra" onclick="quebrar(this, 2)">
+          <img src="https://placehold.co/64x64/555/222?text=STONE" alt="Pixel art style stone block" />
+        </div>
+        <div class="pedra" onclick="quebrar(this, 2)">
+          <img src="https://placehold.co/64x64/555/222?text=STONE" alt="Pixel art style stone block" />
+        </div>
+        <div class="pedra" onclick="quebrar(this, 2)">
+          <img src="https://placehold.co/64x64/555/222?text=STONE" alt="Pixel art style stone block" />
+        </div>
+        <div class="pedra" onclick="quebrar(this, 2)">
+          <img src="https://placehold.co/64x64/555/222?text=STONE" alt="Pixel art style stone block" />
+        </div>
+        <div class="pedra" onclick="quebrar(this, 2)">
+          <img src="https://placehold.co/64x64/555/222?text=STONE" alt="Pixel art style stone block" />
+        </div>
+        <div class="pedra" onclick="quebrar(this, 2)">
+          <img src="https://placehold.co/64x64/555/222?text=STONE" alt="Pixel art style stone block" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Enigma Ferro -->
+    <div id="enigmaFerro">
+      <p>VOCÊ ENCONTRA OUTRO ENIGMA:</p>
+      <blockquote>“Sou um minério cinza e que cria ferramentas cinzas. Quem sou eu?”</blockquote>
+      <input type="text" id="respostaFerro" placeholder="Digite sua resposta" />
+      <br />
+      <button onclick="verificarFerro()">RESPONDER</button>
+      <p id="feedbackFerro"></p>
+    </div>
+
+    <!-- Minigame 3 -->
+    <div id="game3">
+      <p id="timer3">TEMPO: 40s</p>
+      <p>QUEBRE AS PEDRAS DO CAMINHO:</p>
+      <p id="contador3">PEDRAS: 0/9</p>
+      <div>
+        <div class="pedra" onclick="quebrar(this, 3)">
+          <img src="https://placehold.co/64x64/555/222?text=STONE" alt="Pixel art style stone block" />
+        </div>
+        <div class="pedra" onclick="quebrar(this, 3)">
+          <img src="https://placehold.co/64x64/555/222?text=STONE" alt="Pixel art style stone block" />
+        </div>
+        <div class="pedra" onclick="quebrar(this, 3)">
+          <img src="https://placehold.co/64x64/555/222?text=STONE" alt="Pixel art style stone block" />
+        </div>
+        <div class="pedra" onclick="quebrar(this, 3)">
+          <img src="https://placehold.co/64x64/555/222?text=STONE" alt="Pixel art style stone block" />
+        </div>
+        <div class="pedra" onclick="quebrar(this, 3)">
+          <img src="https://placehold.co/64x64/555/222?text=STONE" alt="Pixel art style stone block" />
+        </div>
+        <div class="pedra" onclick="quebrar(this, 3)">
+          <img src="https://placehold.co/64x64/555/222?text=STONE" alt="Pixel art style stone block" />
+        </div>
+        <div class="pedra" onclick="quebrar(this, 3)">
+          <img src="https://placehold.co/64x64/555/222?text=STONE" alt="Pixel art style stone block" />
+        </div>
+        <div class="pedra" onclick="quebrar(this, 3)">
+          <img src="https://placehold.co/64x64/555/222?text=STONE" alt="Pixel art style stone block" />
+        </div>
+        <div class="pedra" onclick="quebrar(this, 3)">
+          <img src="https://placehold.co/64x64/555/222?text=STONE" alt="Pixel art style stone block" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Luta com o Zumbi -->
+    <div id="fight">
+      <p>UM ZUMBI APARECE!</p>
+      <img id="zombie-img" src="https://placehold.co/150x150/444/f00?text=ZOMBIE" alt="Pixel art zombie with green skin and torn clothes" />
+      <p>VIDA: <span id="vidaJogador">100</span></p>
+      <p>ZUMBI: <span id="vidaZumbi">100</span></p>
+      <button class="attack-btn" onclick="atacar()">ATACAR</button>
+      <p id="resultadoLuta"></p>
+    </div>
+
+    <!-- Enigma Diamante -->
+    <div id="enigmaDiamante">
+      <p>ENIGMA FINAL:</p>
+      <blockquote>“É o bloco azul brilhante e raro que usamos para ferramentas muito fortes!”</blockquote>
+      <input type="text" id="respostaDiamante" placeholder="Digite sua resposta" />
+      <br />
+      <button onclick="verificarDiamante()">RESPONDER</button>
+      <p id="feedbackDiamante"></p>
+    </div>
+
+    <!-- Minigame Final - Diamante -->
+    <div id="gameDiamante">
+      <p>QUEBRE OS BLOCOS DE DIAMANTE:</p>
+      <div id="diamanteBlocksContainer"></div>
+      <p id="contadorDiamante">BLOCOS: 0/30</p>
+    </div>
+
+    <!-- Final -->
+    <div id="finalMessage" style="display:none;">
+      <h2>PARABÉNS!</h2>
+      <p>Você conquistou a mina sombria.</p>
+      <a href="templo.html">IR PARA O TEMPLO</a>
+    </div>
+
+    <!-- Mensagem derrota -->
+    <div id="defeatMessage">
+      <p>VOCÊ FOI DERROTADO!</p>
+      <button onclick="reiniciarJogo()">REINICIAR</button>
+    </div>
+  </div>
+
+  <script>
+    // Variáveis do jogo
+    let jogos = {
+      1: { quebradas: 0 },
+      2: { quebradas: 0 },
+      3: { quebradas: 0 },
+      4: { quebradas: 0 },
+    };
+
+    let timerId, timerId2, timerId3;
+    let lutando = false;
+    let vidaJogador = 100;
+    let vidaZumbi = 100;
+
+    // Cria os blocos de diamante dinamicamente
+    function criarBlocosDiamante() {
+      const container = document.getElementById('diamanteBlocksContainer');
+      container.innerHTML = '';
+      
+      for (let i = 0; i < 30; i++) {
+        const bloco = document.createElement('div');
+        bloco.classList.add('diamante');
+        bloco.onclick = () => quebrar(bloco, 4);
+
+        const img = document.createElement('img');
+        img.src = "https://placehold.co/64x64/39f/fff?text=DIAMOND";
+        img.alt = "Pixel art diamond block with blue color and shiny effect";
+        
+        bloco.appendChild(img);
+        container.appendChild(bloco);
+      }
+    }
+
+    // Inicia o timer para cada fase
+    function iniciarTimerFase(fase) {
+      let tempo = 40;
+      let timerElement, contadorElement, totalPedras = 9;
+
+      if (fase === 1) {
+        timerElement = document.getElementById('timer');
+        contadorElement = document.getElementById('contador');
+        jogos[1].quebradas = 0;
+        document.querySelectorAll('#game .pedra').forEach(p => resetPedra(p, 1));
+        mostrarGame(true);
+        mostrarEnigma(false);
+        mostrarGame2(false);
+        mostrarEnigmaFerro(false);
+        mostrarGame3(false);
+        mostrarLuta(false);
+        mostrarEnigmaDiamante(false);
+        mostrarGameDiamante(false);
+        mostrarFinal(false);
+        mostrarGameOver(false);
+        mostrarDefeat(false);
+      } 
+      else if (fase === 2) {
+        timerElement = document.getElementById('timer2');
+        contadorElement = document.getElementById('contador2');
+        jogos[2].quebradas = 0;
+        document.querySelectorAll('#game2 .pedra').forEach(p => resetPedra(p, 2));
+        mostrarGame(false);
+        mostrarEnigma(false);
+        mostrarGame2(true);
+        mostrarEnigmaFerro(false);
+        mostrarGame3(false);
+        mostrarLuta(false);
+        mostrarEnigmaDiamante(false);
+        mostrarGameDiamante(false);
+        mostrarFinal(false);
+        mostrarGameOver(false);
+        mostrarDefeat(false);
+      } 
+      else if (fase === 3) {
+        timerElement = document.getElementById('timer3');
+        contadorElement = document.getElementById('contador3');
+        jogos[3].quebradas = 0;
+        document.querySelectorAll('#game3 .pedra').forEach(p => resetPedra(p, 3));
+        mostrarGame(false);
+        mostrarEnigma(false);
+        mostrarGame2(false);
+        mostrarEnigmaFerro(false);
+        mostrarGame3(true);
+        mostrarLuta(false);
+        mostrarEnigmaDiamante(false);
+        mostrarGameDiamante(false);
+        mostrarFinal(false);
+        mostrarGameOver(false);
+        mostrarDefeat(false);
+      } 
+      else if (fase === 4) {
+        criarBlocosDiamante();
+        jogos[4].quebradas = 0;
+        document.getElementById('contadorDiamante').textContent = 'BLOCOS: 0/30';
+        mostrarGame(false);
+        mostrarEnigma(false);
+        mostrarGame2(false);
+        mostrarEnigmaFerro(false);
+        mostrarGame3(false);
+        mostrarLuta(false);
+        mostrarEnigmaDiamante(false);
+        mostrarGameDiamante(true);
+        mostrarFinal(false);
+        mostrarGameOver(false);
+        mostrarDefeat(false);
+        return;
+      }
+
+      if (timerId) clearInterval(timerId);
+      timerElement.textContent = `TEMPO: ${tempo}s`;
+
+      timerId = setInterval(() => {
+        tempo--;
+        timerElement.textContent = `TEMPO: ${tempo}s`;
+        
+        if (tempo <= 0) {
+          clearInterval(timerId);
+          mostrarGameOver(true);
+        }
+      }, 1000);
+    }
+
+    // Reseta o estado de uma pedra
+    function resetPedra(pedra, fase) {
+      pedra.style.pointerEvents = 'auto';
+      pedra.classList.remove('quebrando');
+      pedra.style.opacity = '1';
+      pedra.style.display = 'inline-block';
+      
+      if (pedra.querySelector('img')) {
+        if (fase === 1 || fase === 2 || fase === 3) {
+          pedra.querySelector('img').src = "https://placehold.co/64x64/555/222?text=STONE";
+        } else if (fase === 4) {
+          pedra.querySelector('img').src = "https://placehold.co/64x64/39f/fff?text=DIAMOND";
+        }
+      }
+    }
+
+    // Quebra uma pedra/diamante
+    function quebrar(pedra, fase) {
+      if (pedra.classList.contains('quebrando')) return;
+
+      pedra.classList.add('quebrando');
+      pedra.style.pointerEvents = 'none';
+
+      setTimeout(() => {
+        pedra.style.display = 'none';
+      }, 500);
+
+      jogos[fase].quebradas++;
+
+      if (fase === 1) {
+        document.getElementById('contador').textContent = `PEDRAS: ${jogos[1].quebradas}/9`;
+        if (jogos[1].quebradas >= 9) {
+          clearInterval(timerId);
+          mostrarGame(false);
+          mostrarEnigma(true);
+        }
+      } 
+      else if (fase === 2) {
+        document.getElementById('contador2').textContent = `PEDRAS: ${jogos[2].quebradas}/9`;
+        if (jogos[2].quebradas >= 9) {
+          clearInterval(timerId);
+          mostrarGame2(false);
+          mostrarEnigmaFerro(true);
+        }
+      } 
+      else if (fase === 3) {
+        document.getElementById('contador3').textContent = `PEDRAS: ${jogos[3].quebradas}/9`;
+        if (jogos[3].quebradas >= 9) {
+          clearInterval(timerId);
+          mostrarGame3(false);
+          mostrarLuta(true);
+          iniciarLuta();
+        }
+      } 
+      else if (fase === 4) {
+        jogos[4].quebradas++;
+        document.getElementById('contadorDiamante').textContent = `BLOCOS: ${jogos[4].quebradas}/30`;
+        pedra.style.display = 'none';
+        if (jogos[4].quebradas >= 30) {
+          mostrarGameDiamante(false);
+          mostrarFinal(true);
+        }
+      }
+    }
+
+    // Funções para mostrar/ocultar seções
+    function mostrarGame(show) {
+      document.getElementById('game').style.display = show ? 'block' : 'none';
+    }
+
+    function mostrarEnigma(show) {
+      document.getElementById('enigma').style.display = show ? 'block' : 'none';
+    }
+
+    function mostrarGame2(show) {
+      document.getElementById('game2').style.display = show ? 'block' : 'none';
+    }
+
+    function mostrarEnigmaFerro(show) {
+      document.getElementById('enigmaFerro').style.display = show ? 'block' : 'none';
+    }
+
+    function mostrarGame3(show) {
+      document.getElementById('game3').style.display = show ? 'block' : 'none';
+    }
+
+    function mostrarLuta(show) {
+      document.getElementById('fight').style.display = show ? 'block' : 'none';
+    }
+
+    function mostrarEnigmaDiamante(show) {
+      document.getElementById('enigmaDiamante').style.display = show ? 'block' : 'none';
+    }
+
+    function mostrarGameDiamante(show) {
+      document.getElementById('gameDiamante').style.display = show ? 'block' : 'none';
+    }
+
+    function mostrarGameOver(show) {
+      document.getElementById('gameover').style.display = show ? 'block' : 'none';
+    }
+
+    function mostrarFinal(show) {
+      document.getElementById('finalMessage').style.display = show ? 'block' : 'none';
+    }
+
+    function mostrarDefeat(show) {
+      document.getElementById('defeatMessage').style.display = show ? 'block' : 'none';
+    }
+
+    // Funções para os enigmas
+    function verificar() {
+      const resposta = document.getElementById('resposta').value.toLowerCase().trim();
+      const feedback = document.getElementById('feedback');
+      
+      if (resposta === 'carvão' || resposta === 'carvao') {
+        feedback.style.color = 'var(--success-color)';
+        feedback.textContent = 'CORRETO! Avance para a próxima fase.';
+        
+        setTimeout(() => {
+          mostrarEnigma(false);
+          iniciarTimerFase(2);
+          document.getElementById('resposta').value = '';
+          feedback.textContent = '';
+        }, 1500);
+      } 
+      else {
+        feedback.style.color = 'var(--danger-color)';
+        feedback.textContent = 'ERRO. Tente novamente.';
+      }
+    }
+
+    function verificarFerro() {
+      const resposta = document.getElementById('respostaFerro').value.toLowerCase().trim();
+      const feedback = document.getElementById('feedbackFerro');
+      
+      if (resposta === 'ferro') {
+        feedback.style.color = 'var(--success-color)';
+        feedback.textContent = 'CORRETO! Avance para a próxima fase.';
+        
+        setTimeout(() => {
+          mostrarEnigmaFerro(false);
+          iniciarTimerFase(3);
+          document.getElementById('respostaFerro').value = '';
+          feedback.textContent = '';
+        }, 1500);
+      } 
+      else {
+        feedback.style.color = 'var(--danger-color)';
+        feedback.textContent = 'ERRO. Tente novamente.';
+      }
+    }
+
+    function verificarDiamante() {
+      const resposta = document.getElementById('respostaDiamante').value.toLowerCase().trim();
+      const feedback = document.getElementById('feedbackDiamante');
+      
+      if (resposta === 'diamante') {
+        feedback.style.color = 'var(--success-color)';
+        feedback.textContent = 'CORRETO! Agora quebre os blocos!';
+        
+        setTimeout(() => {
+          mostrarEnigmaDiamante(false);
+          iniciarTimerFase(4);
+          document.getElementById('respostaDiamante').value = '';
+          feedback.textContent = '';
+        }, 1500);
+      } 
+      else {
+        feedback.style.color = 'var(--danger-color)';
+        feedback.textContent = 'ERRO. Tente novamente.';
+      }
+    }
+
+    // Sistema de combate
+    function iniciarLuta() {
+      vidaJogador = 100;
+      vidaZumbi = 100;
+      atualizarVida();
+      document.getElementById('resultadoLuta').textContent = '';
+    }
+
+    function atualizarVida() {
+      document.getElementById('vidaJogador').textContent = vidaJogador;
+      document.getElementById('vidaZumbi').textContent = vidaZumbi;
+    }
+
+    function atacar() {
+        if (vidaJogador <= 0 || vidaZumbi <= 0) return;
+
+        // Efeito visual do ataque
+        const zombieImg = document.getElementById('zombie-img');
+        zombieImg.style.transform = 'translate(5px, 5px)';
+        setTimeout(() => {
+            zombieImg.style.transform = 'translate(0, 0)';
+        }, 100);
+
+        const danoJogador = Math.floor(Math.random() * 15) + 5;
+        vidaZumbi -= danoJogador;
+        if (vidaZumbi < 0) vidaZumbi = 0;
+
+        const danoZumbi = Math.floor(Math.random() * 12) + 3;
+        vidaJogador -= danoZumbi;
+        if (vidaJogador < 0) vidaJogador = 0;
+
+        atualizarVida();
+
+        let resultado = `Você causou ${danoJogador} de dano. Zumbi causou ${danoZumbi} de dano.`;
+
+        if (vidaZumbi === 0) {
+            resultado += ' Você venceu o zumbi! Avance para o enigma final.';
+            setTimeout(() => {
+                mostrarLuta(false);
+                mostrarEnigmaDiamante(true);
+            }, 1500);
+        } else if (vidaJogador === 0) {
+            resultado += ' Você foi derrotado...';
+            setTimeout(() => {
+                mostrarLuta(false);
+                mostrarDefeat(true);
+            }, 1500);
+        }
+
+        document.getElementById('resultadoLuta').textContent = resultado;
+    }
+
+    // Reiniciar o jogo
+    function reiniciarJogo() {
+        mostrarGameOver(false);
+        mostrarDefeat(false);
+        iniciarTimerFase(1);
+    }
+
+    // Efeitos sonoros simples
+    function playSound(type) {
+        const sounds = {
+            break: new Audio('https://assets.codepen.io/215128/break.mp3'),
+            win: new Audio('https://assets.codepen.io/215128/win.mp3'),
+            lose: new Audio('https://assets.codepen.io/215128/lose.mp3')
+        };
+        
+        if (sounds[type]) {
+            sounds[type].volume = 0.3;
+            sounds[type].play().catch(e => console.log('Autoplay prevented:', e));
+        }
+    }
+
+    // Inicia o jogo na primeira fase
+    iniciarTimerFase(1);
   </script>
 </body>
 </html>
