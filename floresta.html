@@ -156,9 +156,9 @@
 
   <!-- Setas -->
   <img src="https://img.icons8.com/ios-filled/100/long-arrow-right.png" id="setaMina" class="seta-visual"
-    style="bottom: 500px; right: 100px;">
+    style="bottom: 310px; right: 90px;">
   <img src="https://img.icons8.com/ios-filled/100/long-arrow-right.png" id="setaFloresta" class="seta-visual"
-    style="top: 40px; left: 1000px; transform: rotate(270deg);">
+    style="top: 40px; left: 600px; transform: rotate(270deg);">
 
   <!-- Som de digitação -->
   <audio id="type-sound" src="assets/typing.mp3" preload="auto"></audio>
@@ -216,22 +216,30 @@
       ];
 
       let index = 0;
+      let digitando = false;
 
       function digitarProximoTexto() {
-        if (index < textos.length) {
-          textoIntroEl.innerHTML = "";
-          digitarTexto(textoIntroEl, textos[index], 0, 40, () => {
-            index++;
-            setTimeout(digitarProximoTexto, 1800);
-          });
-        } else {
-          document.body.onclick = iniciarJogo; // ativar clique para iniciar jogo
-        }
+        if (digitando) return;
+        digitando = true;
+        textoIntroEl.innerHTML = "";
+        digitarTexto(textoIntroEl, textos[index], 0, 40, () => {
+          digitando = false;
+          index++;
+          if (index >= textos.length) {
+            document.body.onclick = iniciarJogo;
+          }
+        });
       }
 
       setTimeout(() => {
         textoIntroEl.style.transition = "opacity 1.5s ease";
         textoIntroEl.style.opacity = "1";
+        textoIntroEl.onclick = () => {
+          if (!digitando && index < textos.length) {
+            digitarProximoTexto();
+          }
+        };
+        // Digita o primeiro texto apenas ao clicar
         digitarProximoTexto();
       }, 200);
     }
