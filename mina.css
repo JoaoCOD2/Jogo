@@ -1,0 +1,292 @@
+ @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+    
+    :root {
+      --primary-color: #6ecff6;
+      --secondary-color: #a64ac9;
+      --danger-color: #f8485e;
+      --success-color: #17b978;
+      --warning-color: #f8d210;
+      --dark-color: #1a1a2e;
+      --light-color: #e6e6e6;
+    }
+
+    body {
+      background-color: var(--dark-color);
+      color: var(--light-color);
+      font-family: 'Press Start 2P', cursive;
+      line-height: 1.6;
+      text-align: center;
+      margin: 0;
+      padding: 20px;
+      background-image: 
+        radial-gradient(circle at 25% 25%, rgba(255,255,255,0.05) 1px, transparent 1px),
+        radial-gradient(circle at 75% 75%, rgba(255,255,255,0.05) 1px, transparent 1px);
+      background-size: 20px 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: rgba(0, 0, 0, 0.7);
+      border: 4px solid var(--primary-color);
+      border-radius: 0;
+      box-shadow: 
+        0 0 0 4px var(--secondary-color),
+        0 0 20px rgba(0, 0, 0, 0.8);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .container::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary-color), var(--secondary-color), var(--primary-color));
+      animation: borderEffect 2s linear infinite;
+    }
+
+    @keyframes borderEffect {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 100% 50%; }
+    }
+
+    h1 {
+      color: var(--primary-color);
+      text-shadow: 3px 3px 0 var(--secondary-color);
+      margin-bottom: 30px;
+      font-size: 24px;
+      letter-spacing: 2px;
+    }
+
+    /* Estilo para os blocos de pedra/diamante */
+    .pedra, .diamante {
+      width: 64px;
+      height: 64px;
+      display: inline-block;
+      margin: 6px;
+      border-radius: 0;
+      cursor: pointer;
+      border: 3px solid #222;
+      transition: all 0.3s ease;
+      position: relative;
+      vertical-align: middle;
+      user-select: none;
+      box-shadow: 
+        4px 4px 0 rgba(0, 0, 0, 0.3),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+      image-rendering: pixelated;
+    }
+
+    .pedra {
+      background-color: #444;
+    }
+
+    .diamante {
+      background-color: #39f;
+    }
+
+    .pedra:hover, .diamante:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 
+        6px 6px 0 rgba(0, 0, 0, 0.3),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.3);
+    }
+
+    .pedra img, .diamante img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      pointer-events: none;
+      user-select: none;
+      image-rendering: pixelated;
+    }
+
+    /* Efeito de quebrar (animação) */
+    .quebrando {
+      animation: quebrarAnim 0.5s forwards;
+      pointer-events: none;
+    }
+
+    @keyframes quebrarAnim {
+      0% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+      }
+      50% {
+        transform: scale(1.1) rotate(10deg);
+        opacity: 0.8;
+      }
+      100% {
+        transform: scale(0) rotate(45deg);
+        opacity: 0;
+      }
+    }
+
+    /* Temporizadores e contadores */
+    #timer, #timer2, #timer3 {
+      font-size: 16px;
+      color: var(--warning-color);
+      margin-bottom: 15px;
+      text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
+      letter-spacing: 1px;
+    }
+
+    #contador, #contador2, #contador3, #contadorDiamante {
+      margin-bottom: 20px;
+      color: var(--light-color);
+      text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
+    }
+
+    /* Seções do jogo */
+    #game, #enigma, #game2, #enigmaFerro, 
+    #game3, #fight, #enigmaDiamante, 
+    #gameDiamante, #gameover, #finalMessage, 
+    #defeatMessage {
+      margin: 20px 0;
+      padding: 15px;
+      background-color: rgba(0, 0, 0, 0.5);
+      border: 2px solid var(--secondary-color);
+    }
+
+    #game2, #enigma, #enigmaFerro, 
+    #game3, #fight, #enigmaDiamante, 
+    #gameDiamante, #gameover, #finalMessage, 
+    #defeatMessage {
+      display: none;
+    }
+
+    /* Mensagens de game over */
+    #gameover, #defeatMessage {
+      color: var(--danger-color);
+      text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
+    }
+
+    #gameover p, #defeatMessage p {
+      font-size: 18px;
+      margin-bottom: 20px;
+    }
+
+    /* Botões */
+    button {
+      background-color: var(--secondary-color);
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      font-family: 'Press Start 2P', cursive;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.3);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    button:hover {
+      background-color: var(--primary-color);
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0 rgba(0, 0, 0,  ️0.3);
+    }
+
+    button:active {
+      transform: translate(1px, 1px);
+      box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.3);
+    }
+
+    button.attack-btn {
+      background-color: var(--danger-color);
+    }
+
+    button.attack-btn:hover {
+      background-color: #d6304d;
+    }
+
+    /* Inputs */
+    input {
+      background-color: rgba(0, 0, 0, 0.5);
+      border: 2px solid var(--primary-color);
+      color: white;
+      padding: 10px;
+      font-family: 'Press Start 2P', cursive;
+      font-size: 14px;
+      width: 80%;
+      margin: 10px 0;
+      text-align: center;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: var(--secondary-color);
+    }
+
+    /* Feedback */
+    #feedback, #feedbackFerro, #feedbackDiamante, #resultadoLuta {
+      margin-top: 15px;
+      font-size: 14px;
+      min-height: 20px;
+    }
+
+    /* Displays de vida */
+    #vidaJogador, #vidaZumbi {
+      color: var(--success-color);
+      font-weight: bold;
+    }
+
+    /* Imagem do zumbi */
+    #zombie-img {
+      width: 150px;
+      margin: 10px 0;
+      image-rendering: pixelated;
+      filter: drop-shadow(0 0 5px rgba(255, 0, 0, 0.5));
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    /* Link final */
+    a {
+      color: var(--success-color);
+      text-decoration: none;
+      padding: 10px 20px;
+      border: 2px solid var(--success-color);
+      display: inline-block;
+      margin-top: 20px;
+      transition: all 0.3s ease;
+    }
+
+    a:hover {
+      background-color: var(--success-color);
+      color: black;
+      transform: translate(-2px, -2px);
+      box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.3);
+    }
+
+    /* Responsivo */
+    @media (max-width: 600px) {
+      .container {
+        padding: 10px;
+      }
+      
+      h1 {
+        font-size: 18px;
+      }
+      
+      .pedra, .diamante {
+        width: 50px;
+        height: 50px;
+        margin: 4px;
+      }
+      
+      button {
+        padding: 8px 16px;
+        font-size: 12px;
+      }
+    }
