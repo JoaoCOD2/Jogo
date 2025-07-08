@@ -137,8 +137,8 @@
 
   <!-- INTRODUÇÃO EM TELA PRETA -->
   <div id="telaPretaIntro">
-    <h2 id="introCap">CAPÍTULO 1</h2>
-    <h1 id="introTitulo" style="display: none;">Floresta dos Pixels</h1>
+    <h2 id="introCap">O DESPERTAR</h2>
+    <h1 id="introTitulo" style="display: none;">início da aventura</h1>
   </div>
 
   <div class="container" id="introContainer">
@@ -173,8 +173,9 @@
     const setaFloresta = document.getElementById("setaFloresta");
     const fundoOriginal = document.body.style.backgroundImage;
 
-    const textoQuizTitle = "Dois caminhos surgem na trilha pixelada...";
-    const textoQuizParagraph = "Você pode ouvir o eco de uma mina à direita, ou seguir pela floresta densa à frente.";
+    const textoQuizTitle = "Dois caminhos se abrem para você...";
+    const textoQuizParagraph = "Você pode seguir a trilha brilhante à direita ou explorar a floresta à frente";
+
 
     let iniciado = false;
 
@@ -208,12 +209,10 @@
       textoIntroEl.style.opacity = "0";
 
       const textos = [
-        "Você desperta em uma clareira cercada por árvores altas.",
+        "Você desperta em uma clareira cercada por árvores altas. \nClique para continuar...",
         "O céu pixelado brilha com um sol que se move lentamente. O portal que o trouxe até aqui desapareceu sem deixar vestígios.",
-        "A grama sob seus pés é macia, e ao seu lado repousa um livro antigo. A capa está desgastada, mas as palavras brilham com leveza quando você o abre:",
-        `“Três Cristais mantêm o mundo em equilíbrio.\nCriação, Ordem, Caos.\nQuando unidos, a magia renasce.\nQuando separados, a ruína se espalha.\nAquele que reunir os Três Cristais trará de volta a magia esquecida e abrirá o caminho de volta para casa.”`,
-        "Você levanta!"
       ];
+
 
       let index = 0;
 
@@ -318,7 +317,7 @@
       }, 2000); // Tempo do fade-in do "CAPÍTULO 1"
     });
   </script>
-  
+
 
 </body>
 
