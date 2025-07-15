@@ -3,14 +3,190 @@
 <head>
   <meta charset="UTF-8">
   <title>Final</title>
-  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: #000;
+      background-size: cover;
+      font-family: 'Press Start 2P', monospace;
+      color: #baffc9;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    .final {
+      background: rgba(0, 0, 0, 0.6);
+      border: 2px solid #00ffe1;
+      border-radius: 15px;
+      width: 85%;
+      max-width: 700px;
+      padding: 40px;
+      box-shadow: 0 0 25px #00ffe1aa;
+      text-align: center;
+      display: none;
+      flex-direction: column;
+      gap: 30px;
+    }
+
+    .final h1 {
+      font-size: 24px;
+      color: #eeff00;
+      text-shadow: 2px 2px 6px #000, 0 0 8px #eeff00;
+    }
+
+    .final p {
+      font-size: 14px;
+      color: #c9fcff;
+      line-height: 1.6em;
+      text-shadow: 1px 1px 3px #000;
+      min-height: 80px;
+    }
+
+    .final a {
+      font-size: 12px;
+      padding: 12px 20px;
+      color: #00ffe1;
+      background-color: transparent;
+      border: 2px solid #00ffe1;
+      border-radius: 10px;
+      text-decoration: none;
+      box-shadow: 0 0 10px #00ffe1aa;
+      transition: 0.3s ease;
+      display: inline-block;
+    }
+
+    .final a:hover {
+      background-color: #00ffe1;
+      color: #000;
+      box-shadow: 0 0 20px #00ffe1aa;
+      transform: scale(1.05);
+    }
+
+    /* TELA PRETA DE INTRODUÇÃO */
+    #telaPretaIntro {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      background: black;
+      color: #eeff00;
+      font-family: 'Press Start 2P', monospace;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      opacity: 1;
+      transition: opacity 2s ease;
+    }
+
+    #telaPretaIntro h2,
+    #telaPretaIntro h1 {
+      font-size: 60px;
+      opacity: 0;
+      transition: opacity 2s ease;
+    }
+
+    #telaPretaIntro h2.mostrar,
+    #telaPretaIntro h1.mostrar {
+      opacity: 1;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+  </style>
 </head>
 <body>
-  <div class="container">
-    <h1>🎉 Mundo Restaurado!</h1>
-    <p>Com os três blocos mágicos — Resistência, Força e Lógica — você reconstruiu o Reino!</p>
-    <p>As sombras recuam, os blocos voltam ao lugar. O mundo está seguro... por enquanto.</p>
-    <p><a href="index.html">Jogar novamente</a></p>
+
+  <!-- INTRODUÇÃO EM TELA PRETA -->
+  <div id="telaPretaIntro">
+    <h2 id="introCap">O FINAL</h2>
+    <h1 id="introTitulo" style="display: none;">Mundo Restaurado</h1>
   </div>
+
+  <!-- ÁREA PRINCIPAL -->
+  <div class="final" id="finalContainer">
+    <h1 id="tituloFinal"></h1>
+    <p id="textoFinal"></p>
+    <a href="index.html ">Jogar novamente</a>
+  </div>
+
+  <!-- Som de digitação -->
+  <audio id="type-sound" src="assets/typing.mp3" preload="auto"></audio>
+
+  <script>
+    const typeSound = document.getElementById("type-sound");
+    typeSound.volume = 0.2;
+
+    const tituloFinalEl = document.getElementById("tituloFinal");
+    const textoFinalEl = document.getElementById("textoFinal");
+
+    const tituloTexto = "Mundo Restaurado!";
+    const textoMensagem = "Com os cristais mágicos você reconstruiu o Reino!\nAs sombras recuam, os pixels voltam ao lugar.\nO mundo está seguro... por enquanto.";
+
+    function tocarSomTecla(char) {
+      if (char !== " " && char !== "\n") {
+        const somClone = typeSound.cloneNode();
+        somClone.volume = 0.2;
+        somClone.play();
+      }
+    }
+
+    function digitarTexto(element, texto, indice, velocidade, callback) {
+      if (indice < texto.length) {
+        const char = texto.charAt(indice);
+        element.innerHTML += char === "\n" ? "<br>" : char;
+        tocarSomTecla(char);
+        setTimeout(() => digitarTexto(element, texto, indice + 1, velocidade, callback), velocidade);
+      } else if (callback) {
+        callback();
+      }
+    }
+
+    window.addEventListener("load", () => {
+      const telaPreta = document.getElementById("telaPretaIntro");
+      const cap = document.getElementById("introCap");
+      const titulo = document.getElementById("introTitulo");
+
+      cap.classList.add("mostrar");
+
+      setTimeout(() => {
+        cap.classList.remove("mostrar");
+
+        setTimeout(() => {
+          cap.style.display = "none";
+          titulo.style.display = "block";
+          titulo.classList.add("mostrar");
+
+          setTimeout(() => {
+            telaPreta.style.opacity = "0";
+
+            setTimeout(() => {
+              telaPreta.style.display = "none";
+              document.getElementById("finalContainer").style.display = "flex";
+              digitarTexto(tituloFinalEl, tituloTexto, 0, 40, () => {
+                setTimeout(() => {
+                  digitarTexto(textoFinalEl, textoMensagem, 0, 35);
+                }, 400);
+              });
+            }, 2000);
+          }, 2500);
+        }, 500);
+      }, 2000);
+    });
+  </script>
 </body>
 </html>

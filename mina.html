@@ -5,15 +5,17 @@
   <meta charset="UTF-8" />
   <title>Mina Sombria - Pixel Edition</title>
   <style>
+    
     /* Estilo principal com tema pixel art */
     @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
     
+    
     :root {
       --primary-color: #6ecff6;
-      --secondary-color: #a64ac9;
+      --secondary-color: #7b23e0;
       --danger-color: #f8485e;
       --success-color: #17b978;
-      --warning-color: #f8d210;
+      --warning-color: #c22121;
       --dark-color: #1a1a2e;
       --light-color: #e6e6e6;
     }
@@ -299,6 +301,11 @@
 </head>
 
 <body>
+  <div id="intro" style="position:fixed; top:0; left:0; width:100vw; height:100vh; background:black; display:flex; align-items:center; justify-content:center; flex-direction:column; z-index:9999;">
+  <p id="introText" style="color:white; font-family:'Press Start 2P', cursive; font-size:23px; width:80%; text-align:center;"></p>
+  <button id="startGameBtn" onclick="iniciarJogo()" style="display:none; margin-top:30px; border-radius: 10px">COMEÇAR A AVENTURA</button>
+</div>
+
   <div class="container">
     <h1>MINA SOMBRIA - PIXEL EDITION</h1>
 
@@ -848,6 +855,38 @@
 
     // Inicia o jogo na primeira fase
     iniciarTimerFase(1);
+// Texto de introdução
+const textoIntro = "Você entra na caverna escura... Ecos distantes e um cheiro de mofo enchem o ar. Sua missão: escapar da mina sombria.";
+let index = 0;
+
+// Função de digitação animada
+function digitarTexto() {
+  if (index < textoIntro.length) {
+    document.getElementById('introText').textContent += textoIntro.charAt(index);
+    index++;
+    setTimeout(digitarTexto, 45);
+  } else {
+    document.getElementById('startGameBtn').style.display = 'inline-block';
+  }
+}
+
+// Música de fundo
+let musicaFundo = new Audio('https://assets.codepen.io/215128/retro-theme.mp3');
+musicaFundo.loop = true;
+musicaFundo.volume = 0.2;
+
+// Função para iniciar o jogo após o botão
+function iniciarJogo() {
+  document.getElementById('intro').style.display = 'none';
+  iniciarTimerFase(1);
+  setTimeout(() => {
+    musicaFundo.play().catch(e => console.log("Autoplay bloqueado:", e));
+  }, 800);
+}
+
+// Iniciar digitação ao carregar
+window.onload = digitarTexto;
+
   </script>
 </body>
 </html>
