@@ -1,4 +1,11 @@
-<style>
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Templo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
+    <style>
         * {
             box-sizing: border-box;
             user-select: none;
@@ -6,9 +13,10 @@
 
 
         body {
-            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-            color: #eee;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: url('https://i.pinimg.com/originals/88/f3/1f/88f31f60347a6350843acb6e7f1b8c8d.gif') no-repeat center center fixed;
+            color: #ffffff;
+            background-size: cover;
+            font-family: 'Press Start 2P', monospace;
             min-height: 100vh;
             margin: 0;
             padding: 30px 20px;
@@ -195,7 +203,7 @@
 
 
         .path {
-            background-color: #333;
+            background-color: #8f8f8f;
         }
 
 
@@ -223,71 +231,74 @@
         #titulo-animado span {
             display: inline-block;
             animation: brilhar 1.6s infinite;
-            color: #00ffe7;
-            text-shadow: 0 0 6px #00ffe7;
+            color: #00463f;
+            text-shadow: 0 0 6px #004e46;
         }
+
         #congrats-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(10, 10, 10, 0.85);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-    visibility: hidden;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(10, 10, 10, 0.85);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
 
 
-#congrats-modal.show {
-    visibility: visible;
-    opacity: 1;
-}
+        #congrats-modal.show {
+            visibility: visible;
+            opacity: 1;
+        }
 
 
-#congrats-modal .modal-content {
-    background: #022f33;
-    padding: 30px 40px;
-    border-radius: 20px;
-    box-shadow: 0 0 25px #00ffe7;
-    text-align: center;
-    color: #00ffe7;
-    font-size: 1.4rem;
-}
+        #congrats-modal .modal-content {
+            background: #022f33;
+            padding: 30px 40px;
+            border-radius: 20px;
+            box-shadow: 0 0 25px #00ffe7;
+            text-align: center;
+            color: #00ffe7;
+            font-size: 1.4rem;
+        }
 
 
-#congrats-modal button {
-    margin-top: 20px;
-    padding: 10px 24px;
-    font-size: 1.1rem;
-    border-radius: 12px;
-    border: none;
-    background-color: #00ffe7;
-    color: #022f33;
-    cursor: pointer;
-    box-shadow: 0 0 10px #00ffe7;
-    transition: background-color 0.3s;
-}
+        #congrats-modal button {
+            margin-top: 20px;
+            padding: 10px 24px;
+            font-size: 1.1rem;
+            border-radius: 12px;
+            border: none;
+            background-color: #00ffe7;
+            color: #022f33;
+            cursor: pointer;
+            box-shadow: 0 0 10px #00ffe7;
+            transition: background-color 0.3s;
+        }
 
 
-#congrats-modal button:hover {
-    background-color: #00c4b4;
-}
+        #congrats-modal button:hover {
+            background-color: #00c4b4;
+        }
 
 
 
 
-/* AQUI UTILIZEI O CHATGPT PARA CONSEGUIR FICAR MAIS BONITO A MENSAGEM */
+        /* AQUI UTILIZEI O CHATGPT PARA CONSEGUIR FICAR MAIS BONITO A MENSAGEM */
         #titulo-animado span:nth-child(n) {
             animation-delay: calc(0.1s * var(--i));
         }
+
         #titulo-animado span {
             --i: 0;
         }
+
         #titulo-animado span:nth-child(1) {
             --i: 1;
         }
@@ -410,8 +421,45 @@
                 text-shadow: 0 0 14px #00ffe7, 0 0 20px #00ffe7;
             }
         }
+
+        #telaPretaIntro {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: black;
+            color: #00ffe7;
+            font-family: 'Press Start 2P', monospace;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            opacity: 1;
+            transition: opacity 2s ease;
+        }
+
+        #telaPretaIntro h2,
+        #telaPretaIntro h1 {
+            font-size: 36px;
+            opacity: 0;
+            transition: opacity 2s ease;
+            text-shadow: 0 0 8px #00ffe7;
+        }
+
+        #telaPretaIntro h2.mostrar,
+        #telaPretaIntro h1.mostrar {
+            opacity: 1;
+        }
     </style>
 
+<body>
+    <!-- INTRODUÇÃO EM TELA PRETA -->
+    <div id="telaPretaIntro">
+        <h2 id="introCap">TEMPLO ANTIGO</h2>
+        <h1 id="introTitulo" style="display: none;">Os Desafios Começam</h1>
+    </div>
 
     <!-- AQUI É O RESTANTE DA PARTE QUE EU UTILIZEI O CHATGPT PARA FICAR MAIS BONITO A MENSAGEM ↓ -->
     <h1 id="titulo-animado">
@@ -421,12 +469,12 @@
         <span> </span>
         <span>S</span><span>e</span><span>q</span><span>u</span><span>ê</span><span>n</span><span>c</span><span>i</span><span>a</span>
     </h1>
-<!-- AQUI É O RESTANTE DA PARTE QUE EU UTILIZEI O CHATGPT PARA FICAR MAIS BONITO A MENSAGEM ↑ -->
+    <!-- AQUI É O RESTANTE DA PARTE QUE EU UTILIZEI O CHATGPT PARA FICAR MAIS BONITO A MENSAGEM ↑ -->
 
 
 
 
-<!-- PARTE DO HTML ↓↓↓ -->
+    <!-- PARTE DO HTML ↓↓↓ -->
 
 
     <!-- MINIGAME 1 -->
@@ -454,11 +502,11 @@
 
     <!-- MINIGAME 3 PARABÉNS POR COMPLETAR O TEMPLO -->
     <div id="congrats-modal">
-    <div class="modal-content">
-        <div>🎉 Parabéns! Você completou o labirinto! 🎉</div>
-        <button id="btn-final">Ir para o final</button>
+        <div class="modal-content">
+            <div>🎉 Parabéns! Você completou o labirinto! 🎉</div>
+            <button id="btn-final">Ir para o final</button>
+        </div>
     </div>
-</div>
 
 
     <!-- PARTE DO JAVA SCRIPT  ↓↓↓ -->
@@ -489,7 +537,7 @@
 
 
 
-    // INICIAR //
+        // INICIAR //
         function inicializarGrid() {
             criarGrid();
             litCells.clear();
@@ -514,7 +562,7 @@
 
 
 
-       // APAGAR //
+        // APAGAR //
         function apagarCell(index) {
             litCells.delete(index);
             const cell = grid.children[index];
@@ -552,7 +600,7 @@
         });
 
 
-// INICIAR //
+        // INICIAR //
         inicializarGrid();
 
 
@@ -571,7 +619,7 @@
         }
 
 
-       // CRIAR //
+        // CRIAR //
         function criarCards() {
             cards = [];
             colors.forEach((color, i) => {
@@ -604,7 +652,7 @@
         }
 
 
-          // VIRAR //
+        // VIRAR //
         function virarCarta(card) {
             if (flippedCards.length >= 2 || matchedCards.has(card.dataset.id)) return;
             if (flippedCards.includes(card)) return;
@@ -653,7 +701,7 @@
 
 
 
-          // INICIAR JOGO DA MEMÓRIA //
+        // INICIAR JOGO DA MEMÓRIA //
         function iniciarMemoryGame() {
             criarCards();
             desenharCards();
@@ -665,7 +713,7 @@
 
 
 
-            // GRID DO JOGO DA MEMÓRIA //
+        // GRID DO JOGO DA MEMÓRIA //
         memoryGrid.addEventListener('click', e => {
             const card = e.target.closest('.card');
             if (card) virarCarta(card);
@@ -690,7 +738,7 @@
 
 
         let playerPos = { x: 0, y: 0 };
-         
+
         function desenharLabirinto() {
             mazeGrid.innerHTML = '';
             for (let y = 0; y < mazeRows; y++) {
@@ -714,7 +762,7 @@
 
 
 
-          // FUNÇÃO PARA SE MOVER NO LABIRINTO //
+        // FUNÇÃO PARA SE MOVER NO LABIRINTO //
         function mover(dx, dy) {
             const novoX = playerPos.x + dx;
             const novoY = playerPos.y + dy;
@@ -729,28 +777,28 @@
                 playerPos.y = novoY;
                 desenharLabirinto();
                 if (mazeMap[novoY][novoX] === 'G') {
-    mostrarModalParabens();
-}
+                    mostrarModalParabens();
                 }
             }
+        }
 
 
-            // FUNÇÃO PARA DAR OS PARABÉNS E IR PARA O FINAL //
+        // FUNÇÃO PARA DAR OS PARABÉNS E IR PARA O FINAL //
         function mostrarModalParabens() {
-    const modal = document.getElementById('congrats-modal');
-    modal.classList.add('show');
+            const modal = document.getElementById('congrats-modal');
+            modal.classList.add('show');
 
 
-    const btnFinal = document.getElementById('btn-final');
-    btnFinal.onclick = () => {
-        window.location.href = 'final.html';
-    };
-}
+            const btnFinal = document.getElementById('btn-final');
+            btnFinal.onclick = () => {
+                window.location.href = 'final.html';
+            };
+        }
 
 
 
 
-          // INICIAR O LABIRINTO //
+        // INICIAR O LABIRINTO //
         function iniciarLabirinto() {
             playerPos = { x: 0, y: 0 };
             desenharLabirinto();
@@ -771,9 +819,37 @@
                 case 'ArrowRight': mover(1, 0); break;
             }
         });
-       
+
+        window.addEventListener("load", () => {
+            const telaPreta = document.getElementById("telaPretaIntro");
+            const cap = document.getElementById("introCap");
+            const titulo = document.getElementById("introTitulo");
+
+            cap.classList.add("mostrar");
+
+            setTimeout(() => {
+                cap.classList.remove("mostrar");
+
+                setTimeout(() => {
+                    cap.style.display = "none";
+                    titulo.style.display = "block";
+                    titulo.classList.add("mostrar");
+
+                    setTimeout(() => {
+                        telaPreta.style.opacity = "0";
+
+                        setTimeout(() => {
+                            telaPreta.style.display = "none";
+                            // Se quiser iniciar algo após a intro, chame aqui
+                        }, 2000);
+                    }, 2500);
+                }, 500);
+            }, 2000);
+        });
+
+
     </script>
-    </body>
+</body>
 
 
 </html>
